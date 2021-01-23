@@ -36,7 +36,12 @@ func NewGinServer(
 func (g *GinServer) configure() {
 	g.route = gin.Default()
 
-	g.route.GET("/ping", g.Controller.AccidentController.Ping)
+	api := g.route.Group("/api")
+	web := api.Group("/web")
+	accident := web.Group("/accident")
+	// drowsiness := api.Group("/drowsiness")
+
+	accident.GET("/map", g.Controller.AccidentController.Map)
 
 }
 
