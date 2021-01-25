@@ -41,7 +41,7 @@ func (g *GinServer) configure() {
 	accident := web.Group("/accident")
 	// drowsiness := api.Group("/drowsiness")
 
-	accident.GET("/map", g.Controller.AccidentController.Map)
+	accident.GET("/map/:hour", g.Controller.AccidentController.Map)
 
 }
 

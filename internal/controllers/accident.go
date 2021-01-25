@@ -4,8 +4,8 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
-	"5g-v2x-api-gateway-service/internal/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,22 +32,45 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 // }
 
 func (r *AccidentController) Map(c *gin.Context) {
-	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap()
+	hour := c.Param("hour")
+	hourInt, err := strconv.Atoi(hour)
 	if err != nil {
-		customError := utils.NewCustomError(err)
 		c.JSON(http.StatusBadRequest, models.MapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: false,
-				Message: customError.Message,
+				Message: "Invalid parameter.",
 			},
 			Data: nil,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(int32(hourInt))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.MapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res.Accidents) == 0 {
+		c.JSON(http.StatusOK, models.MapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No accident data.",
+			},
+			Data: res,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, models.MapResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
-			Message: "Yay!",
+			Message: "Get accident data successful.",
 		},
 		Data: res,
 	})

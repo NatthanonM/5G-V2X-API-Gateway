@@ -4,6 +4,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/repositories"
+	proto "5g-v2x-api-gateway-service/pkg/api"
 )
 
 // AccidentService ...
@@ -20,8 +21,10 @@ func NewAccidentService(repo *repositories.AccidentRepository, cf *config.Config
 	}
 }
 
-func (as *AccidentService) GetDailyAccidentMap() (*models.MapResponseData, error) {
-	res, err := as.AccidentRepository.GetDailyAccidentMap()
+func (as *AccidentService) GetDailyAccidentMap(hour int32) (*models.MapResponseData, error) {
+	res, err := as.AccidentRepository.GetDailyAccidentMap(&proto.GetHourlyAccidentOfCurrentDayRequest{
+		Hour: hour,
+	})
 	if err != nil {
 		return nil, err
 	}
