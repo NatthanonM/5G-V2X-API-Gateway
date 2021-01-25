@@ -63,6 +63,10 @@ func (cn *Container) configure() {
 		cn.Error = err
 	}
 
+	if err := cn.container.Provide(controllers.NewDrowsinessController); err != nil {
+		cn.Error = err
+	}
+
 }
 
 // Run ...

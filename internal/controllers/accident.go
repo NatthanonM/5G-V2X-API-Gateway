@@ -31,7 +31,7 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 // 	})
 // }
 
-func (r *AccidentController) Map(c *gin.Context) {
+func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
 	if err != nil {
@@ -74,4 +74,70 @@ func (r *AccidentController) Map(c *gin.Context) {
 		},
 		Data: res,
 	})
+}
+
+func (r *AccidentController) WebAccidentHeatmap(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
+}
+
+func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
+}
+
+func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
+}
+
+func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
+}
+
+func (r *AccidentController) WebAccidentStatAgebar(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
+}
+
+func (r *AccidentController) WebAccidentStatGenderbar(c *gin.Context) {
+	c.JSON(http.StatusNotImplemented, models.MapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: false,
+			Message: "Not implemented.",
+		},
+		Data: nil,
+	})
+	return
 }
