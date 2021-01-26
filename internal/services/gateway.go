@@ -13,6 +13,7 @@ type Service struct {
 type ServiceGateway struct {
 	dig.In
 	*AccidentService
+	*DrowsinessService
 }
 
 // NewService ...

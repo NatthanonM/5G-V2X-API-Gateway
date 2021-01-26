@@ -5,6 +5,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,56 +25,78 @@ func NewDrowsinessController(srv *services.Service, cf *config.Config) *Drowsine
 }
 
 func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.MapResponse{
+	hour := c.Param("hour")
+	hourInt, err := strconv.Atoi(hour)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyDrowsinessHeatmap(int32(hourInt))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No drowsiness data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.DrowsinessMapResponse{
 		BaseResponse: models.BaseResponse{
-			Success: false,
-			Message: "Not implemented.",
+			Success: true,
+			Message: "Get drowsiness data successful.",
 		},
-		Data: nil,
+		Data: res,
 	})
-	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.MapResponse{
-		BaseResponse: models.BaseResponse{
-			Success: false,
-			Message: "Not implemented.",
-		},
-		Data: nil,
+	c.JSON(http.StatusNotImplemented, models.BaseResponse{
+		Success: false,
+		Message: "Not implemented.",
 	})
 	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.MapResponse{
-		BaseResponse: models.BaseResponse{
-			Success: false,
-			Message: "Not implemented.",
-		},
-		Data: nil,
+	c.JSON(http.StatusNotImplemented, models.BaseResponse{
+		Success: false,
+		Message: "Not implemented.",
 	})
 	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.MapResponse{
-		BaseResponse: models.BaseResponse{
-			Success: false,
-			Message: "Not implemented.",
-		},
-		Data: nil,
+	c.JSON(http.StatusNotImplemented, models.BaseResponse{
+		Success: false,
+		Message: "Not implemented.",
 	})
 	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatGenderpie(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.MapResponse{
-		BaseResponse: models.BaseResponse{
-			Success: false,
-			Message: "Not implemented.",
-		},
-		Data: nil,
+	c.JSON(http.StatusNotImplemented, models.BaseResponse{
+		Success: false,
+		Message: "Not implemented.",
 	})
 	return
 }

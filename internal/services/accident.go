@@ -21,16 +21,16 @@ func NewAccidentService(repo *repositories.AccidentRepository, cf *config.Config
 	}
 }
 
-func (as *AccidentService) GetDailyAccidentMap(hour int32) (*models.MapResponseData, error) {
+func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, error) {
 	res, err := as.AccidentRepository.GetDailyAccidentMap(&proto.GetHourlyAccidentOfCurrentDayRequest{
 		Hour: hour,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var mapResponseData models.MapResponseData
+	accidents := []*models.Accident{}
 	for _, accident := range res.Accidents {
-		mapResponseData.Accidents = append(mapResponseData.Accidents, models.Accident{
+		accidents = append(accidents, &models.Accident{
 			Detail: models.AccidentDetail{
 				Time: accident.Time.AsTime(),
 			},
@@ -40,5 +40,5 @@ func (as *AccidentService) GetDailyAccidentMap(hour int32) (*models.MapResponseD
 			},
 		})
 	}
-	return &mapResponseData, nil
+	return accidents, nil
 }

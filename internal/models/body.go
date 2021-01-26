@@ -8,15 +8,10 @@ type BaseResponse struct {
 	Message string `json:"message"`
 }
 
-// MapResponse ...
-type MapResponse struct {
+// AccidentMapResponse ...
+type AccidentMapResponse struct {
 	BaseResponse
-	Data *MapResponseData `json:"data"`
-}
-
-// MapResponseData ...
-type MapResponseData struct {
-	Accidents []Accident `json:"accident"`
+	Data []*Accident `json:"data"`
 }
 
 // Accident ...
@@ -34,4 +29,16 @@ type AccidentDetail struct {
 type AccidentCoordinate struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
+}
+
+// DrowsinessMapResponse ...
+type DrowsinessMapResponse struct {
+	BaseResponse
+	Data []*Drowsiness `json:"data"`
+}
+
+// Drowsiness ...
+type Drowsiness struct {
+	Detail     AccidentDetail     `json:"detail"`
+	Coordinate AccidentCoordinate `json:"coordinate"`
 }
