@@ -42,3 +42,18 @@ func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, 
 	}
 	return accidents, nil
 }
+
+func (as *AccidentService) GetAccidentStatCalendar() ([]*models.AccidentStatCal, error) {
+	res, err := as.AccidentRepository.GetAccidentStatCalendar()
+	if err != nil {
+		return nil, err
+	}
+	accidents := []*models.AccidentStatCal{}
+	for _, accident := range res.Accidents {
+		accidents = append(accidents, &models.AccidentStatCal{
+			Name: accident.Name,
+			Data: accident.Data,
+		})
+	}
+	return accidents, nil
+}

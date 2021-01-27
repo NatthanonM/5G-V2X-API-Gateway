@@ -13,11 +13,20 @@ type AccidentMapResponse struct {
 	BaseResponse
 	Data []*Accident `json:"data"`
 }
+type AccidentStatCalResponse struct {
+	BaseResponse
+	Data []*AccidentStatCal `json:"data"`
+}
 
 // Accident ...
 type Accident struct {
 	Detail     AccidentDetail     `json:"detail"`
 	Coordinate AccidentCoordinate `json:"coordinate"`
+}
+// AccidentStatCal
+type AccidentStatCal struct {
+	Name     string     `json:"name"`
+	Data	 []int32	`json:"data"`
 }
 
 // AccidentDetail ...
