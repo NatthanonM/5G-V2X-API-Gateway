@@ -5,7 +5,9 @@ import "github.com/caarlos0/env"
 // Config ...
 type Config struct {
 	// Mode: Production or Development
-	Mode string `env:"MODE" envDefault:"Development"`
+	Mode          string `env:"MODE" envDefault:"Development"`
+	WebsiteOrigin string `env:"WEBSITE_ORIGIN" envDefault:"http://localhost:3000"`
+	WebsiteDomain string `env:"WEBSITE_DOMAIN" envDefault:"localhost"`
 	// Choose Starting Port
 	Port string `env:"PORT" envDefault:"8080"`
 	// Declare Connection

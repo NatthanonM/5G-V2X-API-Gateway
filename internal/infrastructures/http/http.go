@@ -3,7 +3,9 @@ package http
 import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/controllers"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/dig"
 )
@@ -37,6 +39,17 @@ func (g *GinServer) configure() {
 	g.route = gin.Default()
 
 	api := g.route.Group("/api")
+
+	if g.config.Mode != "Development" {
+		api.Use(cors.New(cors.Config{
+			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
+			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
+			// AllowAllOrigins:  true,
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+			AllowOrigins:     []string{g.config.WebsiteOrigin},
+		}))
+	}
 
 	// drowsiness := api.Group("/drowsiness")
 
