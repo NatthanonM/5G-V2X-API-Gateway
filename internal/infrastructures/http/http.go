@@ -76,9 +76,9 @@ func (g *GinServer) configure() {
 	drowsiness.GET("/stat/calendar", g.Controller.DrowsinessController.WebDrowsinessStatCalendar)
 	drowsiness.GET("/stat/genderpie", g.Controller.DrowsinessController.WebDrowsinessStatGenderpie)
 	//// FOR AUTH WEB
-	// auth := web.Group("/auth")
+	auth := web.Group("/auth")
 	// auth.POST("/login", g.Controller.AccidentController.WebAuthLogin)
-	// auth.POST("/register", g.Controller.AccidentController.WebAuthRegister)
+	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
 	// auth.GET("/driver", g.Controller.AccidentController.WebAuthGetDriver)
 	// auth.POST("/driver", g.Controller.AccidentController.WebAuthCreateDriver)
 	// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)

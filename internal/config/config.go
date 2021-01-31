@@ -10,8 +10,10 @@ type Config struct {
 	WebsiteDomain string `env:"WEBSITE_DOMAIN" envDefault:"localhost"`
 	// Choose Starting Port
 	Port string `env:"PORT" envDefault:"8080"`
+
 	// Declare Connection
 	DataManagementServiceConnection string `env:"DATA_MANAGEMENT_CONNECTION" envDefault:"127.0.0.1:8082"`
+	UserServiceConnection           string `env:"DATA_MANAGEMENT_CONNECTION" envDefault:"127.0.0.1:8083"`
 }
 
 // NewConfig ...

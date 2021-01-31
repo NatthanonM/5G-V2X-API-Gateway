@@ -42,3 +42,9 @@ type Drowsiness struct {
 	Detail     AccidentDetail     `json:"detail"`
 	Coordinate AccidentCoordinate `json:"coordinate"`
 }
+
+// AdminRegisterBody ...
+type AdminRegisterBody struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
