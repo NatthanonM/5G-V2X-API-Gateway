@@ -3,6 +3,7 @@ package http
 import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/controllers"
+	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -43,7 +44,7 @@ func (g *GinServer) configure() {
 	if g.config.Mode != "Development" {
 		api.Use(cors.New(cors.Config{
 			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
-			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
+			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
 			// AllowAllOrigins:  true,
 			AllowCredentials: true,
 			MaxAge:           12 * time.Hour,
@@ -77,7 +78,9 @@ func (g *GinServer) configure() {
 	drowsiness.GET("/stat/genderpie", g.Controller.DrowsinessController.WebDrowsinessStatGenderpie)
 	//// FOR AUTH WEB
 	auth := web.Group("/auth")
-	// auth.POST("/login", g.Controller.AccidentController.WebAuthLogin)
+	auth.OPTIONS("/login", g.preflight)
+	auth.POST("/login", g.Controller.AdminController.WebAuthLogin)
+	// auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
 	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
 	// auth.GET("/driver", g.Controller.AccidentController.WebAuthGetDriver)
 	// auth.POST("/driver", g.Controller.AccidentController.WebAuthCreateDriver)
@@ -100,4 +103,10 @@ func (g *GinServer) configure() {
 // Start ...
 func (g *GinServer) Start() error {
 	return g.route.Run(":" + g.config.Port)
+}
+
+func (g *GinServer) preflight(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", g.config.WebsiteOrigin)
+	c.Header("Access-Control-Allow-Headers", "access-control-allow-origin, access-control-allow-headers")
+	c.JSON(http.StatusOK, struct{}{})
 }

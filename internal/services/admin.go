@@ -30,3 +30,15 @@ func (as *AdminService) Register(username, password string) error {
 	}
 	return nil
 }
+
+func (as *AdminService) Login(username, password string) (*string, error) {
+	request := proto.LoginAdminRequest{
+		Username: username,
+		Password: password,
+	}
+	res, err := as.AdminRepository.Login(&request)
+	if err != nil {
+		return nil, err
+	}
+	return &res.AccessToken, nil
+}

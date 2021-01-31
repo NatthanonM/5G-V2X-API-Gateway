@@ -33,3 +33,16 @@ func (ar *AdminRepository) Register(req *proto.RegisterAdminRequest) error {
 
 	return nil
 }
+
+func (ar *AdminRepository) Login(req *proto.LoginAdminRequest) (*proto.LoginAdminResponse, error) {
+	//	Connect to gRPC service
+	cc := ar.GRPC.ClientConn(ar.config.UserServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewAdminServiceClient(cc).LoginAdmin(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
