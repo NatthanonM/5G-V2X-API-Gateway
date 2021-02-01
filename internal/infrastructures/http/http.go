@@ -83,7 +83,7 @@ func (g *GinServer) configure() {
 	// auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
 	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
 	// auth.GET("/driver", g.Controller.AccidentController.WebAuthGetDriver)
-	// auth.POST("/driver", g.Controller.AccidentController.WebAuthCreateDriver)
+	auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)
 	// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)
 	// auth.DELETE("/driver/:id", g.Controller.AccidentController.WebAuthDeleteDriver)
 	// auth.GET("/car", g.Controller.AccidentController.WebAuthGetCar)

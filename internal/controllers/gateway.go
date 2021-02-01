@@ -15,6 +15,7 @@ type ControllerGateway struct {
 	*AccidentController
 	*DrowsinessController
 	*AdminController
+	*DriverController
 }
 
 // NewController ...

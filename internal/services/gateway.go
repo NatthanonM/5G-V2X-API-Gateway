@@ -15,6 +15,7 @@ type ServiceGateway struct {
 	*AccidentService
 	*DrowsinessService
 	*AdminService
+	*DriverService
 }
 
 // NewService ...
