@@ -58,3 +58,25 @@ func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 		},
 	})
 }
+
+func (cc *CarController) WebAuthGetCar(c *gin.Context) {
+	carList, err := cc.Services.ServiceGateway.CarService.GetCarList()
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusOK, models.WebAuthGetCar{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Register car successful.",
+		},
+		Data: carList,
+	})
+}

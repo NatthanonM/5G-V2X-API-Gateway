@@ -2,6 +2,7 @@ package services
 
 import (
 	"5g-v2x-api-gateway-service/internal/config"
+	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/repositories"
 	proto "5g-v2x-api-gateway-service/pkg/api"
 )
@@ -31,4 +32,23 @@ func (cs *CarService) RegisterNewCar(carDetail, vehicleRegistrationNumber string
 		return nil, err
 	}
 	return &res.CarId, nil
+}
+
+func (cs *CarService) GetCarList() ([]*models.Car, error) {
+
+	res, err := cs.CarRepository.GetCarList()
+	if err != nil {
+		return nil, err
+	}
+
+	carList := []*models.Car{}
+	for _, car := range res.CarList {
+		carList = append(carList, &models.Car{
+			CarID:                     car.CarId,
+			VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+			CarDetail:                 car.CarDetail,
+			RegisteredAt:              car.RegisteredAt.AsTime(),
+		})
+	}
+	return carList, nil
 }

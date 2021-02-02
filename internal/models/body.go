@@ -88,7 +88,8 @@ type WebAuthCreateCar struct {
 	Data *Car `json:"data"`
 }
 
-// Car ...
-type Car struct {
-	CarID string `json:"car_id"`
+// WebAuthGetCar ...
+type WebAuthGetCar struct {
+	BaseResponse
+	Data []*Car `json:"data"`
 }
