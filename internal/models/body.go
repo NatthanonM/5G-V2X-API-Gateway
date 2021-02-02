@@ -75,3 +75,20 @@ type NewDriverBody struct {
 	DateOfBirth time.Time `json:"date_of_birth"`
 	Gender      int64     `json:"gender"`
 }
+
+// NewCarBody ...
+type NewCarBody struct {
+	VehicleRegistrationNumber string `json:"vehicle_registration_number"`
+	CarDetail                 string `json:"car_detail"`
+}
+
+// WebAuthCreateCar ...
+type WebAuthCreateCar struct {
+	BaseResponse
+	Data *Car `json:"data"`
+}
+
+// Car ...
+type Car struct {
+	CarID string `json:"car_id"`
+}
