@@ -80,7 +80,7 @@ func (g *GinServer) configure() {
 	auth := web.Group("/auth")
 	auth.OPTIONS("/login", g.preflight)
 	auth.POST("/login", g.Controller.AdminController.WebAuthLogin)
-	// auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
+	auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
 	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
 	// auth.GET("/driver", g.Controller.AccidentController.WebAuthGetDriver)
 	auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)

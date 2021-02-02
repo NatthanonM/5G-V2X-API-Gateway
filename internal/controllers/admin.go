@@ -94,3 +94,13 @@ func (ac *AdminController) WebAuthLogin(c *gin.Context) {
 		Message: "login successful",
 	})
 }
+
+func (ac *AdminController) WebAuthLogout(c *gin.Context) {
+	c.SetCookie("accessToken", "", -1, "/", ac.config.WebsiteDomain, false, true)
+
+	// Success
+	c.JSON(http.StatusOK, models.BaseResponse{
+		Success: true,
+		Message: "logout successful",
+	})
+}
