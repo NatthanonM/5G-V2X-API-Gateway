@@ -6,7 +6,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/services"
 	"net/http"
 	"strconv"
-
+	// "fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -89,7 +89,7 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatCalendar()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.AccidentStatCalResponse{
+		c.JSON(http.StatusBadRequest, models.StatCalResponse{
 			BaseResponse: models.BaseResponse{
 				Success: false,
 				Message: "Invalid parameter.",
@@ -99,7 +99,7 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.AccidentStatCalResponse{
+		c.JSON(http.StatusOK, models.StatCalResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -108,7 +108,7 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, models.AccidentStatCalResponse{
+	c.JSON(http.StatusOK, models.StatCalResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: "Get accident data successful.",
@@ -119,19 +119,67 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 }
 
 func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
+	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentStreet()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.StatPieResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if res.Series == nil {
+		c.JSON(http.StatusOK, models.StatPieResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No accident data.",
+			},
+			Data:  nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.StatPieResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident data successful.",
+		},
+		Data: res,
 	})
-	return
 }
 
 func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
+	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.StatBarResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.StatBarResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No accident data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.StatBarResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident data successful.",
+		},
+		Data: res,
 	})
-	return
 }
 
 func (r *AccidentController) WebAccidentStatAgebar(c *gin.Context) {

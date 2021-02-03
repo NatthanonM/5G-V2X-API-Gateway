@@ -35,12 +35,12 @@ func (r *AccidentRepository) GetDailyAccidentMap(req *proto.GetHourlyAccidentOfC
 	return res, nil
 }
 
-func (r *AccidentRepository) GetAccidentStatCalendar() (*proto.GetNumberOfAccidentCurrentYearResponse, error) {
+func (r *AccidentRepository) GetAccidentStatCalendar() (*proto.GetNumberOfAccidentToCalendarResponse, error) {
 	//	Connect to gRPC service
 	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
 	defer cc.Close()
 	
-	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentCurrentYear(context.Background(),&empty.Empty{})
+	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentToCalendar(context.Background(),&empty.Empty{})
 	if err != nil {
 		return nil, err
 	}
@@ -48,3 +48,30 @@ func (r *AccidentRepository) GetAccidentStatCalendar() (*proto.GetNumberOfAccide
 	return res, nil
 }
 
+func (r *AccidentRepository) GetNumberOfAccidentTimeBar() (*proto.GetNumberOfAccidentTimeBarResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+	
+	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentTimeBar(context.Background(),&empty.Empty{})
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+
+
+func (r *AccidentRepository) GetNumberOfAccidentStreet() (*proto.GetNumberOfAccidentStreetResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+	
+	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentStreet(context.Background(),&empty.Empty{})
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

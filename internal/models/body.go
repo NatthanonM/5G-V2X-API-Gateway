@@ -13,22 +13,33 @@ type AccidentMapResponse struct {
 	BaseResponse
 	Data []*Accident `json:"data"`
 }
-type AccidentStatCalResponse struct {
+type StatCalResponse struct {
 	BaseResponse
-	Data []*AccidentStatCal `json:"data"`
+	Data []*StatCal `json:"data"`
 }
-
+type StatBarResponse struct{
+	BaseResponse
+	Data []int32 `json:"data"`
+}
+type StatPieResponse struct {
+	BaseResponse
+	Data *StatPie `json:"data"`
+}
 // Accident ...
 type Accident struct {
 	Detail     AccidentDetail     `json:"detail"`
 	Coordinate AccidentCoordinate `json:"coordinate"`
 }
-// AccidentStatCal
-type AccidentStatCal struct {
+// StatCal
+type StatCal struct {
 	Name     string     `json:"name"`
 	Data	 []int32	`json:"data"`
 }
-
+//statpie
+type StatPie struct{
+	Series	[]int32 	`json:"series"`
+	Labels	[]string	`json:"labels"`
+}
 // AccidentDetail ...
 type AccidentDetail struct {
 	Time time.Time `json:"time"`

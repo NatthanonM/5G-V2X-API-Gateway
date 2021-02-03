@@ -43,17 +43,42 @@ func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, 
 	return accidents, nil
 }
 
-func (as *AccidentService) GetAccidentStatCalendar() ([]*models.AccidentStatCal, error) {
+func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) {
 	res, err := as.AccidentRepository.GetAccidentStatCalendar()
 	if err != nil {
 		return nil, err
 	}
-	accidents := []*models.AccidentStatCal{}
+	accidents := []*models.StatCal{}
 	for _, accident := range res.Accidents {
-		accidents = append(accidents, &models.AccidentStatCal{
+		accidents = append(accidents, &models.StatCal{
 			Name: accident.Name,
 			Data: accident.Data,
 		})
 	}
+	return accidents, nil
+}
+
+
+func (as *AccidentService) GetNumberOfAccidentTimeBar() ([]int32, error) {
+	res, err := as.AccidentRepository.GetNumberOfAccidentTimeBar()
+	if err != nil {
+		return nil, err
+	}
+	var accidents []int32 = res.Accidents
+
+	return accidents, nil
+}
+
+func (as *AccidentService) GetNumberOfAccidentStreet() (*models.StatPie, error) {
+	res, err := as.AccidentRepository.GetNumberOfAccidentStreet()
+	if err != nil {
+		return nil, err
+	}
+	var accidents *models.StatPie
+	accidents = &models.StatPie{
+		Series: res.Accidents.Series,
+		Labels: res.Accidents.Labels,
+	}
+
 	return accidents, nil
 }
