@@ -3,7 +3,10 @@ package http
 import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/controllers"
+	"net/http"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/dig"
 )
@@ -38,6 +41,17 @@ func (g *GinServer) configure() {
 
 	api := g.route.Group("/api")
 
+	if g.config.Mode != "Development" {
+		api.Use(cors.New(cors.Config{
+			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
+			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
+			// AllowAllOrigins:  true,
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+			AllowOrigins:     []string{g.config.WebsiteOrigin},
+		}))
+	}
+
 	// drowsiness := api.Group("/drowsiness")
 
 	//// FOR CAR
@@ -63,15 +77,17 @@ func (g *GinServer) configure() {
 	drowsiness.GET("/stat/calendar", g.Controller.DrowsinessController.WebDrowsinessStatCalendar)
 	drowsiness.GET("/stat/genderpie", g.Controller.DrowsinessController.WebDrowsinessStatGenderpie)
 	//// FOR AUTH WEB
-	// auth := web.Group("/auth")
-	// auth.POST("/login", g.Controller.AccidentController.WebAuthLogin)
-	// auth.POST("/register", g.Controller.AccidentController.WebAuthRegister)
+	auth := web.Group("/auth")
+	auth.OPTIONS("/login", g.preflight)
+	auth.POST("/login", g.Controller.AdminController.WebAuthLogin)
+	auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
+	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
 	// auth.GET("/driver", g.Controller.AccidentController.WebAuthGetDriver)
-	// auth.POST("/driver", g.Controller.AccidentController.WebAuthCreateDriver)
+	auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)
 	// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)
 	// auth.DELETE("/driver/:id", g.Controller.AccidentController.WebAuthDeleteDriver)
-	// auth.GET("/car", g.Controller.AccidentController.WebAuthGetCar)
-	// auth.POST("/car", g.Controller.AccidentController.WebAuthCreateCar)
+	auth.GET("/car", g.Controller.CarController.WebAuthGetCar)
+	auth.POST("/car", g.Controller.CarController.WebAuthCreateCar)
 	// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
 	// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 	// auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
@@ -87,4 +103,10 @@ func (g *GinServer) configure() {
 // Start ...
 func (g *GinServer) Start() error {
 	return g.route.Run(":" + g.config.Port)
+}
+
+func (g *GinServer) preflight(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", g.config.WebsiteOrigin)
+	c.Header("Access-Control-Allow-Headers", "access-control-allow-origin, access-control-allow-headers")
+	c.JSON(http.StatusOK, struct{}{})
 }

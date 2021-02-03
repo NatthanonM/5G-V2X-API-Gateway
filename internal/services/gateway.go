@@ -14,6 +14,9 @@ type ServiceGateway struct {
 	dig.In
 	*AccidentService
 	*DrowsinessService
+	*AdminService
+	*DriverService
+	*CarService
 }
 
 // NewService ...

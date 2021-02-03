@@ -14,6 +14,9 @@ type ControllerGateway struct {
 	dig.In
 	*AccidentController
 	*DrowsinessController
+	*AdminController
+	*DriverController
+	*CarController
 }
 
 // NewController ...
