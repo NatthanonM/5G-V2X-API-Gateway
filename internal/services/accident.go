@@ -23,7 +23,7 @@ func NewAccidentService(repo *repositories.AccidentRepository, cf *config.Config
 	}
 }
 
-func (as *AccidentService) GetAccidentCar(from, to time.Time) ([]*models.Coordinate, error) {
+func (as *AccidentService) GetAccidentCar(from, to time.Time) ([]*models.Accident, error) {
 	res, err := as.AccidentRepository.GetAccidentCar(&proto.GetAccidentDataRequest{
 		From: utils.WrapperTime(&from),
 		To:   utils.WrapperTime(&to),
@@ -32,15 +32,19 @@ func (as *AccidentService) GetAccidentCar(from, to time.Time) ([]*models.Coordin
 	if err != nil {
 		return nil, err
 	}
-	coordinates := []*models.Coordinate{}
+	accidents := []*models.Accident{}
 	for _, accident := range res.Accidents {
-		coordinates = append(coordinates, &models.Coordinate{
-			Lat: accident.Latitude,
-			Lng: accident.Longitude,
-		},
-		)
+		accidents = append(accidents, &models.Accident{
+			Detail: models.AccidentDetail{
+				Time: accident.Time.AsTime(),
+			},
+			Coordinate: models.Coordinate{
+				Lat: accident.Latitude,
+				Lng: accident.Longitude,
+			},
+		})
 	}
-	return coordinates, nil
+	return accidents, nil
 }
 
 func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, error) {

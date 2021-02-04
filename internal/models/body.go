@@ -97,5 +97,5 @@ type WebAuthGetCar struct {
 // CarAccidentResponse ...
 type CarAccidentResponse struct {
 	BaseResponse
-	Data []*Coordinate `json:"data"`
+	Data []*Accident `json:"data"`
 }

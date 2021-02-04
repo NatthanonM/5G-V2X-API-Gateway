@@ -33,7 +33,7 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 // }
 
 func (r *AccidentController) CarAccident(c *gin.Context) {
-	from := time.Now().Add(-(45 * time.Minute))
+	from := time.Now().Add(-(60 * time.Minute))
 	to := time.Now()
 
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentCar(from, to)
