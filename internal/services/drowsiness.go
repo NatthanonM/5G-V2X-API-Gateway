@@ -34,7 +34,7 @@ func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.Dr
 			Detail: models.AccidentDetail{
 				Time: accident.Time.AsTime(),
 			},
-			Coordinate: models.AccidentCoordinate{
+			Coordinate: models.Coordinate{
 				Lat: accident.Latitude,
 				Lng: accident.Longitude,
 			},

@@ -55,8 +55,8 @@ func (g *GinServer) configure() {
 	// drowsiness := api.Group("/drowsiness")
 
 	//// FOR CAR
-	// car := api.Group("/car")
-	// car.GET("/accident", g.Controller.AccidentController.CarAccident)
+	car := api.Group("/car")
+	car.GET("/accident", g.Controller.AccidentController.CarAccident)
 	// car.POST("/login", g.Controller.AccidentController.CarLogin)
 	//// FOR WEB
 	web := api.Group("/web")

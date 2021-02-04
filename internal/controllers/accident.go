@@ -6,6 +6,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/services"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,6 +31,41 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 // 		Message: "Pong!",
 // 	})
 // }
+
+func (r *AccidentController) CarAccident(c *gin.Context) {
+	from := time.Now().Add(-(45 * time.Minute))
+	to := time.Now()
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentCar(from, to)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Internal error.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.CarAccidentResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No accident data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.CarAccidentResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident data successful.",
+		},
+		Data: res,
+	})
+}
 
 func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	hour := c.Param("hour")

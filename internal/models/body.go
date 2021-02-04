@@ -16,8 +16,8 @@ type AccidentMapResponse struct {
 
 // Accident ...
 type Accident struct {
-	Detail     AccidentDetail     `json:"detail"`
-	Coordinate AccidentCoordinate `json:"coordinate"`
+	Detail     AccidentDetail `json:"detail"`
+	Coordinate Coordinate     `json:"coordinate"`
 }
 
 // AccidentDetail ...
@@ -25,8 +25,8 @@ type AccidentDetail struct {
 	Time time.Time `json:"time"`
 }
 
-// AccidentCoordinate ...
-type AccidentCoordinate struct {
+// Coordinate ...
+type Coordinate struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
 }
@@ -39,8 +39,8 @@ type DrowsinessMapResponse struct {
 
 // Drowsiness ...
 type Drowsiness struct {
-	Detail     AccidentDetail     `json:"detail"`
-	Coordinate AccidentCoordinate `json:"coordinate"`
+	Detail     AccidentDetail `json:"detail"`
+	Coordinate Coordinate     `json:"coordinate"`
 }
 
 // AdminRegisterBody ...
@@ -92,4 +92,10 @@ type WebAuthCreateCar struct {
 type WebAuthGetCar struct {
 	BaseResponse
 	Data []*Car `json:"data"`
+}
+
+// CarAccidentResponse ...
+type CarAccidentResponse struct {
+	BaseResponse
+	Data []*Coordinate `json:"data"`
 }

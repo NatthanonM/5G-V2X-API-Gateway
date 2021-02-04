@@ -33,3 +33,16 @@ func (r *AccidentRepository) GetDailyAccidentMap(req *proto.GetHourlyAccidentOfC
 
 	return res, nil
 }
+
+func (r *AccidentRepository) GetAccidentCar(req *proto.GetAccidentDataRequest) (*proto.GetAccidentDataResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewAccidentServiceClient(cc).GetAccidentData(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
