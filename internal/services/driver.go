@@ -2,6 +2,7 @@ package services
 
 import (
 	"5g-v2x-api-gateway-service/internal/config"
+	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/repositories"
 	"5g-v2x-api-gateway-service/internal/utils"
 	proto "5g-v2x-api-gateway-service/pkg/api"
@@ -39,4 +40,20 @@ func (ds *DriverService) AddNewDriver(
 		return nil, err
 	}
 	return &res.DriverId, nil
+}
+
+func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
+	drivers, err := ds.DriverRepository.GetAllDriver()
+	if err != nil {
+		return nil, err
+	}
+	driverList := []*models.Driver{}
+	for _, driver := range drivers.Drivers {
+		driverList = append(driverList, &models.Driver{DriverID: driver.DriverID,
+			Firstname:   driver.Firstname,
+			Lastname:    driver.Lastname,
+			DateOfBirth: driver.DateOfBirth.AsTime(),
+			Gender:      driver.Gender})
+	}
+	return driverList, nil
 }

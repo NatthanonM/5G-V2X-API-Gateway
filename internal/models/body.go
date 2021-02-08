@@ -61,11 +61,6 @@ type WebAuthCreateDriverResponse struct {
 	Data *Driver `json:"data"`
 }
 
-// Driver ...
-type Driver struct {
-	DriverID string `json:"driver_id"`
-}
-
 // NewDriverBody ...
 type NewDriverBody struct {
 	Firstname   string    `json:"firstname"`
@@ -98,4 +93,10 @@ type WebAuthGetCar struct {
 type CarAccidentResponse struct {
 	BaseResponse
 	Data []*Accident `json:"data"`
+}
+
+// WebAuthGetDriversResponse ...
+type WebAuthGetDriversResponse struct {
+	BaseResponse
+	Data []*Driver `json:"driver"`
 }
