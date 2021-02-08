@@ -23,10 +23,11 @@ func NewAccidentService(repo *repositories.AccidentRepository, cf *config.Config
 	}
 }
 
-func (as *AccidentService) GetAccidentCar(from, to time.Time) ([]*models.Accident, error) {
+func (as *AccidentService) GetAccidentCar(from, to *time.Time, carID *string) ([]*models.Accident, error) {
 	res, err := as.AccidentRepository.GetAccidentCar(&proto.GetAccidentDataRequest{
-		From: utils.WrapperTime(&from),
-		To:   utils.WrapperTime(&to),
+		From:  utils.WrapperTime(from),
+		To:    utils.WrapperTime(to),
+		CarId: carID,
 	})
 
 	if err != nil {

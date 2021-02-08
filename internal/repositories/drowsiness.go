@@ -33,3 +33,16 @@ func (r *DrowsinessRepository) GetDailyDrowsinessHeatmap(req *proto.GetHourlyDro
 
 	return res, nil
 }
+
+func (r *DrowsinessRepository) GetDrowsiness(req *proto.GetDrowsinessDataRequest) (*proto.GetDrowsinessDataResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewDrowsinessServiceClient(cc).GetDrowsinessData(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

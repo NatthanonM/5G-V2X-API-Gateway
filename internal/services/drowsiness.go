@@ -42,3 +42,25 @@ func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.Dr
 	}
 	return drowsinessMapData, nil
 }
+
+func (ds *DrowsinessService) GetDrowsinessData(carID *string) ([]*models.Drowsiness, error) {
+	res, err := ds.DrowsinessRepository.GetDrowsiness(&proto.GetDrowsinessDataRequest{
+		CarId: carID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	drowsinessMapData := []*models.Drowsiness{}
+	for _, accident := range res.Drowsinesses {
+		drowsinessMapData = append(drowsinessMapData, &models.Drowsiness{
+			Detail: models.AccidentDetail{
+				Time: accident.Time.AsTime(),
+			},
+			Coordinate: models.Coordinate{
+				Lat: accident.Latitude,
+				Lng: accident.Longitude,
+			},
+		})
+	}
+	return drowsinessMapData, nil
+}

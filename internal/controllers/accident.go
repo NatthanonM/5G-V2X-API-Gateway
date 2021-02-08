@@ -36,7 +36,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 	from := time.Now().Add(-(60 * time.Minute))
 	to := time.Now()
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentCar(from, to)
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentCar(&from, &to, nil)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{

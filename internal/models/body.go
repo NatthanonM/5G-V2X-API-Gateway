@@ -83,10 +83,23 @@ type WebAuthCreateCar struct {
 	Data *Car `json:"data"`
 }
 
+// WebAuthGetCars ...
+type WebAuthGetCars struct {
+	BaseResponse
+	Data []*Car `json:"data"`
+}
+
 // WebAuthGetCar ...
 type WebAuthGetCar struct {
 	BaseResponse
-	Data []*Car `json:"data"`
+	Data *WebAuthGetCarResponseData `json:"data"`
+}
+
+// WebAuthGetCarResponseData ...
+type WebAuthGetCarResponseData struct {
+	Car        *Car          `json:"car"`
+	Accident   []*Accident   `json:"accident"`
+	Drowsiness []*Drowsiness `json:"drowsiness"`
 }
 
 // CarAccidentResponse ...

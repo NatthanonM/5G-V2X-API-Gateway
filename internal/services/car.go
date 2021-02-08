@@ -35,7 +35,6 @@ func (cs *CarService) RegisterNewCar(carDetail, vehicleRegistrationNumber string
 }
 
 func (cs *CarService) GetCarList() ([]*models.Car, error) {
-
 	res, err := cs.CarRepository.GetCarList()
 	if err != nil {
 		return nil, err
@@ -48,7 +47,25 @@ func (cs *CarService) GetCarList() ([]*models.Car, error) {
 			VehicleRegistrationNumber: car.VehicleRegistrationNumber,
 			CarDetail:                 car.CarDetail,
 			RegisteredAt:              car.RegisteredAt.AsTime(),
+			CreatedAt:                 car.CreatedAt.AsTime(),
 		})
 	}
 	return carList, nil
+}
+
+func (cs *CarService) GetCar(carID string) (*models.Car, error) {
+	car, err := cs.CarRepository.GetCar(&proto.GetCarResponse{
+		CarId: carID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.Car{
+		CarID:                     car.CarId,
+		VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+		CarDetail:                 car.CarDetail,
+		RegisteredAt:              car.RegisteredAt.AsTime(),
+		CreatedAt:                 car.CreatedAt.AsTime(),
+	}, nil
 }
