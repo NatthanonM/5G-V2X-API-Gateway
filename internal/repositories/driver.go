@@ -48,3 +48,16 @@ func (dr *DriverRepository) GetAllDriver() (*proto.GetAllDriverResponse, error) 
 
 	return res, nil
 }
+
+func (dr *DriverRepository) GetDriver(req *proto.GetDriverRequest) (*proto.Driver, error) {
+	//	Connect to gRPC service
+	cc := dr.GRPC.ClientConn(dr.config.UserServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewDriverServiceClient(cc).GetDriver(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

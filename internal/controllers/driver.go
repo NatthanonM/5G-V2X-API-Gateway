@@ -80,3 +80,25 @@ func (dc *DriverController) WebAuthGetDrivers(c *gin.Context) {
 		Data: drivers,
 	})
 }
+
+func (dc *DriverController) WebAuthGetDriver(c *gin.Context) {
+	driverID := c.Param("id")
+	driver, err := dc.Services.ServiceGateway.DriverService.GetDriver(driverID)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusOK, models.WebAuthGetDriverResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get driver successful.",
+		},
+		Data: driver,
+	})
+}

@@ -100,3 +100,9 @@ type WebAuthGetDriversResponse struct {
 	BaseResponse
 	Data []*Driver `json:"driver"`
 }
+
+// WebAuthGetDriverResponse ...
+type WebAuthGetDriverResponse struct {
+	BaseResponse
+	Data *Driver `json:"driver"`
+}

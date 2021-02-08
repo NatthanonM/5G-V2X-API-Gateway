@@ -49,11 +49,26 @@ func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
 	}
 	driverList := []*models.Driver{}
 	for _, driver := range drivers.Drivers {
-		driverList = append(driverList, &models.Driver{DriverID: driver.DriverID,
+		driverList = append(driverList, &models.Driver{DriverID: driver.DriverId,
 			Firstname:   driver.Firstname,
 			Lastname:    driver.Lastname,
 			DateOfBirth: driver.DateOfBirth.AsTime(),
 			Gender:      driver.Gender})
 	}
 	return driverList, nil
+}
+
+func (ds *DriverService) GetDriver(driverID string) (*models.Driver, error) {
+	driver, err := ds.DriverRepository.GetDriver(&proto.GetDriverRequest{
+		DriverId: driverID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &models.Driver{
+		DriverID:    driver.DriverId,
+		Firstname:   driver.Firstname,
+		Lastname:    driver.Lastname,
+		DateOfBirth: driver.DateOfBirth.AsTime(),
+		Gender:      driver.Gender}, nil
 }
