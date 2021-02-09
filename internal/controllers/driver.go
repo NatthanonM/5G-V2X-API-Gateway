@@ -5,6 +5,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
 	"5g-v2x-api-gateway-service/internal/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -100,5 +101,51 @@ func (dc *DriverController) WebAuthGetDriver(c *gin.Context) {
 			Message: "Get driver successful.",
 		},
 		Data: driver,
+	})
+}
+
+func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
+	driverID := c.Param("id")
+
+	driver, err := dc.Services.ServiceGateway.DriverService.GetDriver(driverID)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	accidents, err := dc.Services.ServiceGateway.AccidentService.GetAccident(nil, nil, nil, &driver.Username)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	privateAccidentData := []*models.Accident{}
+
+	for _, accident := range accidents {
+		privateAccidentData = append(privateAccidentData, &models.Accident{
+			Time:      accident.Time,
+			CarID:     accident.CarID,
+			Username:  accident.Username,
+			Latitude:  accident.Latitude,
+			Longitude: accident.Longitude,
+			Road:      accident.Road,
+		})
+	}
+
+	// Success
+	c.JSON(http.StatusOK, models.WebAuthDriverAccident{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: fmt.Sprintf(`Get accidents of %s successful.`, driver.Username),
+		},
+		Data: accidents,
 	})
 }

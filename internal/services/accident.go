@@ -23,11 +23,12 @@ func NewAccidentService(repo *repositories.AccidentRepository, cf *config.Config
 	}
 }
 
-func (as *AccidentService) GetAccidentCar(from, to *time.Time, carID *string) ([]*models.Accident, error) {
+func (as *AccidentService) GetAccident(from, to *time.Time, carID, username *string) ([]*models.Accident, error) {
 	res, err := as.AccidentRepository.GetAccidentCar(&proto.GetAccidentDataRequest{
-		From:  utils.WrapperTime(from),
-		To:    utils.WrapperTime(to),
-		CarId: carID,
+		From:     utils.WrapperTime(from),
+		To:       utils.WrapperTime(to),
+		CarId:    carID,
+		Username: username,
 	})
 
 	if err != nil {
@@ -36,28 +37,27 @@ func (as *AccidentService) GetAccidentCar(from, to *time.Time, carID *string) ([
 	accidents := []*models.Accident{}
 	for _, accident := range res.Accidents {
 		accidents = append(accidents, &models.Accident{
-			Detail: models.AccidentDetail{
-				Time: accident.Time.AsTime(),
-			},
-			Coordinate: models.Coordinate{
-				Lat: accident.Latitude,
-				Lng: accident.Longitude,
-			},
+			CarID:     accident.CarId,
+			Username:  accident.Username,
+			Time:      accident.Time.AsTime(),
+			Latitude:  accident.Latitude,
+			Longitude: accident.Longitude,
+			Road:      accident.Road,
 		})
 	}
 	return accidents, nil
 }
 
-func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, error) {
+func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.PublicAccidentData, error) {
 	res, err := as.AccidentRepository.GetDailyAccidentMap(&proto.GetHourlyAccidentOfCurrentDayRequest{
 		Hour: hour,
 	})
 	if err != nil {
 		return nil, err
 	}
-	accidents := []*models.Accident{}
+	publicAccidentData := []*models.PublicAccidentData{}
 	for _, accident := range res.Accidents {
-		accidents = append(accidents, &models.Accident{
+		publicAccidentData = append(publicAccidentData, &models.PublicAccidentData{
 			Detail: models.AccidentDetail{
 				Time: accident.Time.AsTime(),
 			},
@@ -67,7 +67,7 @@ func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.Accident, 
 			},
 		})
 	}
-	return accidents, nil
+	return publicAccidentData, nil
 }
 
 func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) {
@@ -84,7 +84,6 @@ func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) 
 	}
 	return accidents, nil
 }
-
 
 func (as *AccidentService) GetNumberOfAccidentTimeBar() ([]int32, error) {
 	res, err := as.AccidentRepository.GetNumberOfAccidentTimeBar()

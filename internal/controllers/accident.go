@@ -36,7 +36,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 	from := time.Now().Add(-(60 * time.Minute))
 	to := time.Now()
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentCar(&from, &to, nil)
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&from, &to, nil, nil)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{
@@ -151,7 +151,7 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 		},
 		Data: res,
 	})
-	
+
 }
 
 func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
@@ -173,7 +173,7 @@ func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 				Success: true,
 				Message: "No accident data.",
 			},
-			Data:  nil,
+			Data: nil,
 		})
 		return
 	}

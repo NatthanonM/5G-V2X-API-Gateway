@@ -21,26 +21,26 @@ func NewDrowsinessService(repo *repositories.DrowsinessRepository, cf *config.Co
 	}
 }
 
-func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.Drowsiness, error) {
+func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.PublicDrowsinessData, error) {
 	res, err := ds.DrowsinessRepository.GetDailyDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
 		Hour: hour,
 	})
 	if err != nil {
 		return nil, err
 	}
-	drowsinessMapData := []*models.Drowsiness{}
-	for _, accident := range res.Drowsinesses {
-		drowsinessMapData = append(drowsinessMapData, &models.Drowsiness{
+	publicDrowsinessData := []*models.PublicDrowsinessData{}
+	for _, drowsiness := range res.Drowsinesses {
+		publicDrowsinessData = append(publicDrowsinessData, &models.PublicDrowsinessData{
 			Detail: models.AccidentDetail{
-				Time: accident.Time.AsTime(),
+				Time: drowsiness.Time.AsTime(),
 			},
 			Coordinate: models.Coordinate{
-				Lat: accident.Latitude,
-				Lng: accident.Longitude,
+				Lat: drowsiness.Latitude,
+				Lng: drowsiness.Longitude,
 			},
 		})
 	}
-	return drowsinessMapData, nil
+	return publicDrowsinessData, nil
 }
 
 func (ds *DrowsinessService) GetDrowsinessData(carID *string) ([]*models.Drowsiness, error) {
@@ -51,15 +51,16 @@ func (ds *DrowsinessService) GetDrowsinessData(carID *string) ([]*models.Drowsin
 		return nil, err
 	}
 	drowsinessMapData := []*models.Drowsiness{}
-	for _, accident := range res.Drowsinesses {
+	for _, drowsiness := range res.Drowsinesses {
 		drowsinessMapData = append(drowsinessMapData, &models.Drowsiness{
-			Detail: models.AccidentDetail{
-				Time: accident.Time.AsTime(),
-			},
-			Coordinate: models.Coordinate{
-				Lat: accident.Latitude,
-				Lng: accident.Longitude,
-			},
+			CarID:        drowsiness.CarId,
+			Username:     drowsiness.Username,
+			Time:         drowsiness.Time.AsTime(),
+			ResponseTime: drowsiness.ResponseTime,
+			WorkingHour:  drowsiness.WorkingHour,
+			Latitude:     drowsiness.Latitude,
+			Longitude:    drowsiness.Longitude,
+			Road:         drowsiness.Road,
 		})
 	}
 	return drowsinessMapData, nil
