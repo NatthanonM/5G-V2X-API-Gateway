@@ -20,6 +20,15 @@ message AddNewDriverRequest {
 
 message AddNewDriverReponse { string driver_id = 1; }
 
+message GetDriverByUsernameRequest {
+  string username = 1;
+}
+
+message GetDriverByUsernameResponse {
+  string driver_id = 1;
+}
+
 service DriverService {
   rpc AddNewDriver(AddNewDriverRequest) returns (AddNewDriverReponse) {}
+  rpc GetDriverByUsername(GetDriverByUsernameRequest) returns (GetDriverByUsernameResponse) {}
 }

@@ -22,7 +22,9 @@ type Accident struct {
 
 // AccidentDetail ...
 type AccidentDetail struct {
-	Time time.Time `json:"time"`
+	Time   time.Time `json:"time"`
+	Driver *Driver   `json:"driver"`
+	Car    *Car      `json:"car"`
 }
 
 // Coordinate ...

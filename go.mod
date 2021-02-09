@@ -7,7 +7,7 @@ require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
-	github.com/golang/protobuf v1.4.2
+	github.com/golang/protobuf v1.4.3
 	go.uber.org/dig v1.10.0
 	google.golang.org/grpc v1.35.0
 	google.golang.org/protobuf v1.25.0

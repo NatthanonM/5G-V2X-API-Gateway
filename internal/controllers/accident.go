@@ -159,3 +159,48 @@ func (r *AccidentController) WebAccidentStatGenderbar(c *gin.Context) {
 	})
 	return
 }
+
+func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
+	hour := c.Param("hour")
+	hourInt, err := strconv.Atoi(hour)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(int32(hourInt))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.AccidentMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No accident data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.AccidentMapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident data successful.",
+		},
+		Data: res,
+	})
+}
