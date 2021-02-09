@@ -141,11 +141,59 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 	}
 
 	// Success
-	c.JSON(http.StatusOK, models.WebAuthDriverAccident{
+	c.JSON(http.StatusOK, models.WebAuthDriverAccidentResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: fmt.Sprintf(`Get accidents of %s successful.`, driver.Username),
 		},
 		Data: accidents,
+	})
+}
+
+func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
+	driverID := c.Param("id")
+
+	driver, err := dc.Services.ServiceGateway.DriverService.GetDriver(driverID)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	drowsinesses, err := dc.Services.ServiceGateway.GetDrowsinessData(nil, &driver.Username)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	privateDrowsinessesData := []*models.Drowsiness{}
+
+	for _, drowsiness := range drowsinesses {
+		privateDrowsinessesData = append(privateDrowsinessesData, &models.Drowsiness{
+			CarID:        drowsiness.CarID,
+			Username:     drowsiness.Username,
+			Time:         drowsiness.Time,
+			ResponseTime: drowsiness.ResponseTime,
+			WorkingHour:  drowsiness.WorkingHour,
+			Latitude:     drowsiness.Latitude,
+			Longitude:    drowsiness.Longitude,
+			Road:         drowsiness.Road,
+		})
+	}
+
+	// Success
+	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: fmt.Sprintf(`Get drowsiness of %s successful.`, driver.Username),
+		},
+		Data: privateDrowsinessesData,
 	})
 }

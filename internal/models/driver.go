@@ -43,10 +43,16 @@ type WebAuthCreateDriverResponse struct {
 	Data *Driver `json:"data"`
 }
 
-//// REST RESPONSE ENTITY ////
-
-// WebAuthDriverAccident ...
-type WebAuthDriverAccident struct {
+// WebAuthDriverAccidentResponse ...
+type WebAuthDriverAccidentResponse struct {
 	BaseResponse
 	Data []*Accident `json:"data"`
 }
+
+// WebAuthDriverDrowsinessResponse ...
+type WebAuthDriverDrowsinessResponse struct {
+	BaseResponse
+	Data []*Drowsiness `json:"data"`
+}
+
+//// REST RESPONSE ENTITY ////

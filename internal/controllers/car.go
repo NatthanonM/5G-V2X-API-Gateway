@@ -105,7 +105,7 @@ func (cc *CarController) WebAuthGetCar(c *gin.Context) {
 		return
 	}
 
-	drowsiness, err := cc.Services.ServiceGateway.DrowsinessService.GetDrowsinessData(&carID)
+	drowsiness, err := cc.Services.ServiceGateway.DrowsinessService.GetDrowsinessData(&carID, nil)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
