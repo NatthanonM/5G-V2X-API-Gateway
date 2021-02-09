@@ -48,3 +48,15 @@ func (cr *CarRepository) GetCarList() (*proto.GetCarListResponse, error) {
 
 	return res, nil
 }
+
+func (cr *CarRepository) GetCarByID(req *proto.GetCarByIDRequest) (*proto.Car, error) {
+	cc := cr.GRPC.ClientConn(cr.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewCarServiceClient(cc).GetCar(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
