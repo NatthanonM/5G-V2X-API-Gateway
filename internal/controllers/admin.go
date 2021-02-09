@@ -104,3 +104,36 @@ func (ac *AdminController) WebAuthLogout(c *gin.Context) {
 		Message: "logout successful",
 	})
 }
+
+func (ac *AdminController) WebAuthProfile(c *gin.Context) {
+	ctxData, _ := c.Get(utils.UsernameCtxKey)
+	d, ok := ctxData.(string)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, models.BaseResponse{
+			Success: false,
+			Message: "Authorization invalid",
+		},
+		)
+		return
+	}
+
+	admin, err := ac.Services.ServiceGateway.AdminService.GetProfile(d)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusOK, models.WebAuthProfileResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "logout successful",
+		},
+		Data: admin,
+	})
+}

@@ -3,6 +3,7 @@ package http
 import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/controllers"
+	"5g-v2x-api-gateway-service/internal/infrastructures/middleware"
 	"net/http"
 	"time"
 
@@ -13,9 +14,10 @@ import (
 
 // GinServer ...
 type GinServer struct {
-	route      *gin.Engine
-	config     *config.Config
-	Controller controllers.ControllerGateway
+	route          *gin.Engine
+	config         *config.Config
+	AuthMiddleware *middleware.AuthMiddleware
+	Controller     controllers.ControllerGateway
 }
 
 // ResolverGateway ...
@@ -26,11 +28,13 @@ type ResolverGateway struct {
 // NewGinServer ...
 func NewGinServer(
 	cg controllers.ControllerGateway,
+	auth *middleware.AuthMiddleware,
 	config *config.Config,
 ) *GinServer {
 	h := &GinServer{
-		Controller: cg,
-		config:     config,
+		Controller:     cg,
+		AuthMiddleware: auth,
+		config:         config,
 	}
 	h.configure()
 	return h
@@ -80,24 +84,28 @@ func (g *GinServer) configure() {
 	auth := web.Group("/auth")
 	auth.OPTIONS("/login", g.preflight)
 	auth.POST("/login", g.Controller.AdminController.WebAuthLogin)
-	auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
 	auth.POST("/register", g.Controller.AdminController.WebAuthRegister)
-	auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)
-	auth.GET("/driver", g.Controller.DriverController.WebAuthGetDrivers)
-	auth.GET("/driver/:id", g.Controller.DriverController.WebAuthGetDriver)
-	// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)
-	// auth.DELETE("/driver/:id", g.Controller.AccidentController.WebAuthDeleteDriver)
-	auth.GET("/car", g.Controller.CarController.WebAuthGetCars)
-	auth.GET("/car/:id", g.Controller.CarController.WebAuthGetCar)
-	auth.POST("/car", g.Controller.CarController.WebAuthCreateCar)
-	// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
-	// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
-	// auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
-	// auth.GET("/drowsiness/map/:hour", g.Controller.AccidentController.WebAuthDrowsinessMap)
-	auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
-	// auth.GET("/driver/:id/accident/stat", g.Controller.AccidentController.WebAuthDriverAccidentStat)
-	auth.GET("/driver/:id/drowsiness", g.Controller.DriverController.WebAuthDriverDrowsiness)
-	// auth.GET("/driver/:id/drowsiness/stat", g.Controller.AccidentController.WebAuthDriverDrowsinessStat)
+	auth.Use(g.AuthMiddleware.AuthAdminMiddleware())
+	{
+		auth.GET("/profile", g.Controller.AdminController.WebAuthProfile)
+		auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
+		auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)
+		auth.GET("/driver", g.Controller.DriverController.WebAuthGetDrivers)
+		auth.GET("/driver/:id", g.Controller.DriverController.WebAuthGetDriver)
+		// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)
+		// auth.DELETE("/driver/:id", g.Controller.AccidentController.WebAuthDeleteDriver)
+		auth.GET("/car", g.Controller.CarController.WebAuthGetCars)
+		auth.GET("/car/:id", g.Controller.CarController.WebAuthGetCar)
+		auth.POST("/car", g.Controller.CarController.WebAuthCreateCar)
+		// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
+		// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
+		// auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
+		// auth.GET("/drowsiness/map/:hour", g.Controller.AccidentController.WebAuthDrowsinessMap)
+		auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
+		// auth.GET("/driver/:id/accident/stat", g.Controller.AccidentController.WebAuthDriverAccidentStat)
+		auth.GET("/driver/:id/drowsiness", g.Controller.DriverController.WebAuthDriverDrowsiness)
+		// auth.GET("/driver/:id/drowsiness/stat", g.Controller.AccidentController.WebAuthDriverDrowsinessStat)
+	}
 
 }
 

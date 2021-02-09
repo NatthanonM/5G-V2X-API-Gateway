@@ -5,6 +5,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/controllers"
 	"5g-v2x-api-gateway-service/internal/infrastructures/grpc"
 	"5g-v2x-api-gateway-service/internal/infrastructures/http"
+	"5g-v2x-api-gateway-service/internal/infrastructures/middleware"
 	"5g-v2x-api-gateway-service/internal/repositories"
 	"5g-v2x-api-gateway-service/internal/services"
 
@@ -37,6 +38,9 @@ func (cn *Container) configure() {
 		cn.Error = err
 	}
 	if err := cn.container.Provide(grpc.NewGRPC); err != nil {
+		cn.Error = err
+	}
+	if err := cn.container.Provide(middleware.NewAuthMiddleware); err != nil {
 		cn.Error = err
 	}
 

@@ -46,3 +46,16 @@ func (ar *AdminRepository) Login(req *proto.LoginAdminRequest) (*proto.LoginAdmi
 
 	return res, nil
 }
+
+func (ar *AdminRepository) VerifyAccessToken(req *proto.VerifyAdminAccessTokenRequest) (*proto.VerifyAdminAccessTokenResponse, error) {
+	//	Connect to gRPC service
+	cc := ar.GRPC.ClientConn(ar.config.UserServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewAdminServiceClient(cc).VerifyAdminAccessToken(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
