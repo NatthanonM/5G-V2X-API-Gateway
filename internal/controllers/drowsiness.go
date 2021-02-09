@@ -70,11 +70,35 @@ func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 }
 
 func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetNumberOfDrowsinessTimeBar()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.StatBarResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.StatBarResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No drowsiness data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.StatBarResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get drowsiness data successful.",
+		},
+		Data: res,
 	})
-	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
@@ -86,11 +110,35 @@ func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
 }
 
 func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatCalendar()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.StatCalResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.StatCalResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No Drowsiness data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.StatCalResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get Drowsiness data successful.",
+		},
+		Data: res,
 	})
-	return
 }
 
 func (r *DrowsinessController) WebDrowsinessStatGenderpie(c *gin.Context) {

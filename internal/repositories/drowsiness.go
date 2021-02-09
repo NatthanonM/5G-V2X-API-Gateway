@@ -5,6 +5,8 @@ import (
 	"5g-v2x-api-gateway-service/internal/infrastructures/grpc"
 	proto "5g-v2x-api-gateway-service/pkg/api"
 	"context"
+
+	"github.com/golang/protobuf/ptypes/empty"
 )
 
 // DrowsinessRepository ...
@@ -40,6 +42,32 @@ func (r *DrowsinessRepository) GetDrowsiness(req *proto.GetDrowsinessDataRequest
 	defer cc.Close()
 
 	res, err := proto.NewDrowsinessServiceClient(cc).GetDrowsinessData(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (r *DrowsinessRepository) GetDrowsinessStatCalendar() (*proto.GetNumberOfDrowsinessToCalendarResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewDrowsinessServiceClient(cc).GetNumberOfDrowsinessToCalendar(context.Background(), &empty.Empty{})
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (r *DrowsinessRepository) GetNumberOfDrowsinessTimeBar() (*proto.GetNumberOfDrowsinessTimeBarResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewDrowsinessServiceClient(cc).GetNumberOfDrowsinessTimeBar(context.Background(), &empty.Empty{})
 	if err != nil {
 		return nil, err
 	}

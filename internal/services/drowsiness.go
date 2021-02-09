@@ -64,3 +64,28 @@ func (ds *DrowsinessService) GetDrowsinessData(carID *string) ([]*models.Drowsin
 	}
 	return drowsinessMapData, nil
 }
+
+func (as *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, error) {
+	res, err := as.DrowsinessRepository.GetDrowsinessStatCalendar()
+	if err != nil {
+		return nil, err
+	}
+	drowsinesses := []*models.StatCal{}
+	for _, drowsiness := range res.Drowsinesss {
+		drowsinesses = append(drowsinesses, &models.StatCal{
+			Name: drowsiness.Name,
+			Data: drowsiness.Data,
+		})
+	}
+	return drowsinesses, nil
+}
+
+func (as *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
+	res, err := as.DrowsinessRepository.GetNumberOfDrowsinessTimeBar()
+	if err != nil {
+		return nil, err
+	}
+	var drowsinesss []int32 = res.Drowsinesss
+
+	return drowsinesss, nil
+}

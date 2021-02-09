@@ -13,11 +13,35 @@ type AccidentMapResponse struct {
 	BaseResponse
 	Data []*Accident `json:"data"`
 }
+type StatCalResponse struct {
+	BaseResponse
+	Data []*StatCal `json:"data"`
+}
+type StatBarResponse struct {
+	BaseResponse
+	Data []int32 `json:"data"`
+}
+type StatPieResponse struct {
+	BaseResponse
+	Data *StatPie `json:"data"`
+}
 
 // Accident ...
 type Accident struct {
 	Detail     AccidentDetail `json:"detail"`
 	Coordinate Coordinate     `json:"coordinate"`
+}
+
+// StatCal
+type StatCal struct {
+	Name string  `json:"name"`
+	Data []int32 `json:"data"`
+}
+
+//statpie
+type StatPie struct {
+	Series []int32  `json:"series"`
+	Labels []string `json:"labels"`
 }
 
 // AccidentDetail ...
@@ -111,11 +135,11 @@ type CarAccidentResponse struct {
 // WebAuthGetDriversResponse ...
 type WebAuthGetDriversResponse struct {
 	BaseResponse
-	Data []*Driver `json:"driver"`
+	Data []*Driver `json:"data"`
 }
 
 // WebAuthGetDriverResponse ...
 type WebAuthGetDriverResponse struct {
 	BaseResponse
-	Data *Driver `json:"driver"`
+	Data *Driver `json:"data"`
 }
