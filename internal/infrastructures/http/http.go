@@ -62,8 +62,8 @@ func (g *GinServer) configure() {
 	web := api.Group("/web")
 	//// FOR ACCIDENT WEB
 	accident := web.Group("/accident")
-	accident.GET("/map/:hour", g.Controller.AccidentController.WebAccidentMap)
-	accident.GET("/heatmap/:hour", g.Controller.AccidentController.WebAccidentHeatmap)
+	accident.GET("/heatmap/:hour", g.Controller.AccidentController.WebAccidentMap)
+	// accident.GET("/map/:hour", g.Controller.AccidentController.WebAccidentHeatmap)
 	accident.GET("/stat/calendar", g.Controller.AccidentController.WebAccidentStatCalendar)
 	accident.GET("/stat/roadpie", g.Controller.AccidentController.WebAccidentStatRoadpie)
 	accident.GET("/stat/timebar", g.Controller.AccidentController.WebAccidentStatTimebar)
@@ -94,7 +94,6 @@ func (g *GinServer) configure() {
 	// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 	// auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
 	// auth.GET("/drowsiness/map/:hour", g.Controller.AccidentController.WebAuthDrowsinessMap)
-	// auth.GET("/driver/:id", g.Controller.AccidentController.WebAuthDriver)
 	// auth.GET("/driver/:id/accident", g.Controller.AccidentController.WebAuthDriverAccident)
 	// auth.GET("/driver/:id/accident/stat", g.Controller.AccidentController.WebAuthDriverAccidentStat)
 	// auth.GET("/driver/:id/drowsiness", g.Controller.AccidentController.WebAuthDriverDrowsiness)
