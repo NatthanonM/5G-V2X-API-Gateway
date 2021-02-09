@@ -8,4 +8,5 @@ type Driver struct {
 	Lastname    string    `json:"lastname"`
 	DateOfBirth time.Time `json:"date_of_birth"`
 	Gender      string    `json:"gender"`
+	Username    string    `json:"username"`
 }

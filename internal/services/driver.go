@@ -53,7 +53,9 @@ func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
 			Firstname:   driver.Firstname,
 			Lastname:    driver.Lastname,
 			DateOfBirth: driver.DateOfBirth.AsTime(),
-			Gender:      driver.Gender})
+			Gender:      driver.Gender,
+			Username:    driver.Username,
+		})
 	}
 	return driverList, nil
 }
@@ -70,5 +72,7 @@ func (ds *DriverService) GetDriver(driverID string) (*models.Driver, error) {
 		Firstname:   driver.Firstname,
 		Lastname:    driver.Lastname,
 		DateOfBirth: driver.DateOfBirth.AsTime(),
-		Gender:      driver.Gender}, nil
+		Gender:      driver.Gender,
+		Username:    driver.Username,
+	}, nil
 }
