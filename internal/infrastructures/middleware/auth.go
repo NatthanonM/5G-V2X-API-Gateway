@@ -4,7 +4,6 @@ import (
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
 	"5g-v2x-api-gateway-service/internal/utils"
-	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,10 +44,6 @@ func (a *AuthMiddleware) AuthAdminMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// put it in context
-		ctx := context.WithValue(c.Request.Context(), utils.UsernameCtxKey, c)
-		c.Request = c.Request.WithContext(ctx)
-
-		c.Set(utils.UsernameCtxKey, username)
+		c.Set(utils.UsernameCtxKey, *username)
 	}
 }

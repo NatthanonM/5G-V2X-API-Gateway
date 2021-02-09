@@ -106,6 +106,7 @@ func (ac *AdminController) WebAuthLogout(c *gin.Context) {
 }
 
 func (ac *AdminController) WebAuthProfile(c *gin.Context) {
+
 	ctxData, _ := c.Get(utils.UsernameCtxKey)
 	d, ok := ctxData.(string)
 	if !ok {
@@ -132,7 +133,7 @@ func (ac *AdminController) WebAuthProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, models.WebAuthProfileResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
-			Message: "logout successful",
+			Message: "Get profile successful",
 		},
 		Data: admin,
 	})
