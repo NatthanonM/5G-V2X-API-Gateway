@@ -49,7 +49,7 @@ func (cr *CarRepository) GetCarList() (*proto.GetCarListResponse, error) {
 	return res, nil
 }
 
-func (cr *CarRepository) GetCar(req *proto.GetCarResponse) (*proto.Car, error) {
+func (cr *CarRepository) GetCar(req *proto.GetCarRequest) (*proto.Car, error) {
 	//	Connect to gRPC service
 	cc := cr.GRPC.ClientConn(cr.config.DataManagementServiceConnection)
 	defer cc.Close()

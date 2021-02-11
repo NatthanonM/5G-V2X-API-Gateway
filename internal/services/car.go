@@ -54,7 +54,7 @@ func (cs *CarService) GetCarList() ([]*models.Car, error) {
 }
 
 func (cs *CarService) GetCar(carID string) (*models.Car, error) {
-	car, err := cs.CarRepository.GetCar(&proto.GetCarResponse{
+	car, err := cs.CarRepository.GetCar(&proto.GetCarRequest{
 		CarId: carID,
 	})
 	if err != nil {
