@@ -10,13 +10,17 @@ import (
 // DrowsinessService ...
 type DrowsinessService struct {
 	DrowsinessRepository *repositories.DrowsinessRepository
+	DriverRepository     *repositories.DriverRepository
+	CarRepository        *repositories.CarRepository
 	config               *config.Config
 }
 
 // NewDrowsinessService ...
-func NewDrowsinessService(repo *repositories.DrowsinessRepository, cf *config.Config) *DrowsinessService {
+func NewDrowsinessService(repo *repositories.DrowsinessRepository, driverRepo *repositories.DriverRepository, carRepo *repositories.CarRepository, cf *config.Config) *DrowsinessService {
 	return &DrowsinessService{
 		DrowsinessRepository: repo,
+		DriverRepository:     driverRepo,
+		CarRepository:        carRepo,
 		config:               cf,
 	}
 }
@@ -90,4 +94,49 @@ func (as *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
 	var drowsinesss []int32 = res.Drowsinesss
 
 	return drowsinesss, nil
+}
+func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(hour int32) ([]*models.PublicDrowsinessData, error) {
+	res, err := ds.DrowsinessRepository.GetDailyAuthDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
+		Hour: hour,
+	})
+	if err != nil {
+		return nil, err
+	}
+	drowsinessMapData := []*models.PublicDrowsinessData{}
+	for _, accident := range res.Drowsinesses {
+		// TODO#1: call user service to get driver id by username
+		driver, err := ds.DriverRepository.GetDriverByUsername(&proto.GetDriverByUsernameRequest{
+			Username: accident.Username,
+		})
+		if err != nil {
+			return nil, err
+		}
+		// TODO#2: call data-management service to get driver id by username
+		car, err := ds.CarRepository.GetCar(&proto.GetCarRequest{
+			// TODO: change to accident.CarId when carId is valid
+			CarId: "83e9b831-53f2-4e22-a4b7-039d59c69d62",
+		})
+		if err != nil {
+			return nil, err
+		}
+		drowsinessMapData = append(drowsinessMapData, &models.PublicDrowsinessData{
+			Detail: models.AccidentDetail{
+				Time: accident.Time.AsTime(),
+				Driver: &models.Driver{
+					DriverID: driver.DriverId,
+				},
+				Car: &models.Car{
+					CarID:                     car.CarId,
+					VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+					CarDetail:                 car.CarDetail,
+					RegisteredAt:              car.RegisteredAt.AsTime(),
+				},
+			},
+			Coordinate: models.Coordinate{
+				Lat: accident.Latitude,
+				Lng: accident.Longitude,
+			},
+		})
+	}
+	return drowsinessMapData, nil
 }

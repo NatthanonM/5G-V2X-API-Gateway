@@ -69,6 +69,51 @@ func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 	})
 }
 
+func (r *DrowsinessController) WebAuthDrowsinessMap(c *gin.Context) {
+	hour := c.Param("hour")
+	hourInt, err := strconv.Atoi(hour)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyAuthDrowsinessHeatmap(int32(hourInt))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: false,
+				Message: "Invalid parameter.",
+			},
+			Data: nil,
+		})
+		return
+	}
+	if len(res) == 0 {
+		c.JSON(http.StatusOK, models.DrowsinessMapResponse{
+			BaseResponse: models.BaseResponse{
+				Success: true,
+				Message: "No drowsiness data.",
+			},
+			Data: res,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.DrowsinessMapResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get drowsiness data successful.",
+		},
+		Data: res,
+	})
+}
+
 func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.DrowsinessService.GetNumberOfDrowsinessTimeBar()
 
