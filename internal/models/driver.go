@@ -23,6 +23,13 @@ type NewDriverBody struct {
 	Gender      string    `json:"gender"`
 }
 
+// DriverLoginBody ...
+type DriverLoginBody struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	CarID    string `json:"car_id"`
+}
+
 //// REST RESPONSE ////
 
 // WebAuthGetDriversResponse ...

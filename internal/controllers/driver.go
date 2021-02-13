@@ -221,3 +221,33 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		Data: privateDrowsinessesData,
 	})
 }
+
+func (dc *DriverController) CarLogin(c *gin.Context) {
+	var temp models.DriverLoginBody
+	c.BindJSON(&temp)
+
+	if temp.Username == "" || temp.Password == "" || temp.CarID == "" {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid parameter.",
+		})
+		return
+	}
+
+	_, err := dc.Services.ServiceGateway.DriverService.Login(temp.Username, temp.Password, temp.CarID)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusCreated, models.BaseResponse{
+		Success: true,
+		Message: "login successful",
+	})
+}

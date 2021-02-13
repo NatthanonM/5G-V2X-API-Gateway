@@ -74,3 +74,16 @@ func (dr *DriverRepository) GetDriverByUsername(req *proto.GetDriverByUsernameRe
 
 	return res, nil
 }
+
+func (dr *DriverRepository) LoginDriver(req *proto.LoginDriverRequest) (*proto.LoginDriverResponse, error) {
+	cc := dr.GRPC.ClientConn(dr.config.UserServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewDriverServiceClient(cc).LoginDriver(context.Background(), req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
