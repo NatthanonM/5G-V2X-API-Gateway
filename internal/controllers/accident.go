@@ -49,7 +49,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{
+		c.JSON(http.StatusOK, models.CarAccidentResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -97,7 +97,7 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
+		c.JSON(http.StatusOK, models.AccidentMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -138,7 +138,7 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusBadRequest, models.StatCalResponse{
+		c.JSON(http.StatusOK, models.StatCalResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -200,7 +200,7 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusBadRequest, models.StatBarResponse{
+		c.JSON(http.StatusOK, models.StatBarResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -266,7 +266,7 @@ func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
+		c.JSON(http.StatusOK, models.AccidentMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
