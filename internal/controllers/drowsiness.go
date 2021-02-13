@@ -4,6 +4,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
+	"5g-v2x-api-gateway-service/internal/utils"
 	"log"
 	"net/http"
 	"strconv"
@@ -210,4 +211,36 @@ func (r *DrowsinessController) WebDrowsinessStatGenderpie(c *gin.Context) {
 		Message: "Not implemented.",
 	})
 	return
+}
+
+// WebAuthDriverDrowsinessStatTimebar ...
+func (r *DrowsinessController) WebAuthDriverDrowsinessStatTimebar(c *gin.Context) {
+	driverID := c.Param("id")
+
+	driver, err := r.Services.ServiceGateway.DriverService.GetDriver(driverID)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatTimebar(nil, nil, &driver.Username)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessStatTimebarResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get drowsiness timebar successful.",
+		},
+		Data: res,
+	})
 }

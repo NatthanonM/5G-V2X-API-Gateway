@@ -108,7 +108,7 @@ func (g *GinServer) configure() {
 		auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
 		auth.GET("/driver/:id/accident/stat/timebar", g.Controller.AccidentController.WebAuthDriverAccidentStatTimebar)
 		auth.GET("/driver/:id/drowsiness", g.Controller.DriverController.WebAuthDriverDrowsiness)
-		// auth.GET("/driver/:id/drowsiness/stat/timebar", g.Controller.DrowsinessController.WebAuthDriverDrowsinessStat)
+		auth.GET("/driver/:id/drowsiness/stat/timebar", g.Controller.DrowsinessController.WebAuthDriverDrowsinessStatTimebar)
 	}
 
 }

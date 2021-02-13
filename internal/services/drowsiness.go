@@ -152,3 +152,16 @@ func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(from, to *time.Time) 
 	}
 	return drowsinessMapData, nil
 }
+
+// GetDrowsinessStatTimebar ...
+func (ds *DrowsinessService) GetDrowsinessStatTimebar(from, to *time.Time, driverUsername *string) ([]int64, error) {
+	drowsinessCountByHour, err := ds.DrowsinessRepository.GetDrowsinessStatGroupByHour(&proto.GetDrowsinessStatGroupByHourRequest{
+		From:           utils.WrapperTime(from),
+		To:             utils.WrapperTime(to),
+		DriverUsername: driverUsername,
+	})
+	if err != nil {
+		return []int64{}, err
+	}
+	return drowsinessCountByHour.Drowsinesses, nil
+}
