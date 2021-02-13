@@ -6,8 +6,8 @@ type Accident struct {
 	CarID     string    `json:"car_id"`
 	Username  string    `json:"username"`
 	Time      time.Time `json:"time"`
-	Latitude  float64   `json:"latitude"`
-	Longitude float64   `json:"longitude"`
+	Latitude  float64   `json:"lat"`
+	Longitude float64   `json:"lng"`
 	Road      string    `json:"road"`
 }
 

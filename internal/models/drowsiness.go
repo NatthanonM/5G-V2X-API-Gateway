@@ -8,8 +8,8 @@ type Drowsiness struct {
 	Time         time.Time `json:"time"`
 	ResponseTime float64   `json:"response_time"`
 	WorkingHour  float64   `json:"working_hour"`
-	Latitude     float64   `json:"latitude"`
-	Longitude    float64   `json:"longitude"`
+	Latitude     float64   `json:"lat"`
+	Longitude    float64   `json:"lng"`
 	Road         string    `json:"road"`
 }
 
