@@ -4,6 +4,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
+	"5g-v2x-api-gateway-service/internal/utils"
 	"net/http"
 	"strconv"
 	"time"
@@ -40,17 +41,15 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&from, &to, nil, nil)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Internal error.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.CarAccidentResponse{
+		c.JSON(http.StatusBadRequest, models.CarAccidentResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -90,17 +89,15 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(&from, &to)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.AccidentMapResponse{
+		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -133,17 +130,15 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatCalendar()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.StatCalResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.StatCalResponse{
+		c.JSON(http.StatusBadRequest, models.StatCalResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -166,12 +161,10 @@ func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentStreet()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.StatPieResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
@@ -199,17 +192,15 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.StatBarResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.StatBarResponse{
+		c.JSON(http.StatusBadRequest, models.StatBarResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -267,17 +258,15 @@ func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(&from, &to)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
 		})
 		return
 	}
 	if len(res) == 0 {
-		c.JSON(http.StatusOK, models.AccidentMapResponse{
+		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: true,
 				Message: "No accident data.",
@@ -290,6 +279,38 @@ func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: "Get accident data successful.",
+		},
+		Data: res,
+	})
+}
+
+// WebAuthDriverAccidentStatTimebar ...
+func (r *AccidentController) WebAuthDriverAccidentStatTimebar(c *gin.Context) {
+	driverID := c.Param("id")
+
+	driver, err := r.Services.ServiceGateway.DriverService.GetDriver(driverID)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatTimebar(nil, nil, &driver.Username)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.WebAuthDriverAccidentStatTimebarResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident timebar successful.",
 		},
 		Data: res,
 	})

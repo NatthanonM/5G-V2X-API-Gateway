@@ -87,3 +87,16 @@ func (r *AccidentRepository) GetNumberOfAccidentStreet() (*proto.GetNumberOfAcci
 
 	return res, nil
 }
+
+func (r *AccidentRepository) GetAccidentStatGroupByHour(req *proto.GetAccidentStatGroupByHourRequest) (*proto.GetAccidentStatGroupByHourResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewAccidentServiceClient(cc).GetAccidentStatGroupByHour(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

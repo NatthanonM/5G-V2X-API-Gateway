@@ -43,6 +43,11 @@ type CarAccidentResponse struct {
 	Data []*Accident `json:"data"`
 }
 
+type WebAuthDriverAccidentStatTimebarResponse struct {
+	BaseResponse
+	Data []int64 `json:"data"`
+}
+
 //// REST RESPONSE ENTITY ////
 
 // AccidentData ...

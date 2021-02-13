@@ -168,3 +168,16 @@ func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*mode
 	}
 	return accidents, nil
 }
+
+// GetAccidentStatTimebar ...
+func (as *AccidentService) GetAccidentStatTimebar(from, to *time.Time, driverUsername *string) ([]int64, error) {
+	accidentCountByHour, err := as.AccidentRepository.GetAccidentStatGroupByHour(&proto.GetAccidentStatGroupByHourRequest{
+		From:           utils.WrapperTime(from),
+		To:             utils.WrapperTime(to),
+		DriverUsername: driverUsername,
+	})
+	if err != nil {
+		return []int64{}, err
+	}
+	return accidentCountByHour.Accidents, nil
+}
