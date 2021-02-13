@@ -85,7 +85,6 @@ func (ds *DriverService) Login(username, password, carID string) (*string, error
 	res, err := ds.DriverRepository.LoginDriver(&proto.LoginDriverRequest{
 		Username: username,
 		Password: password,
-		CarId:    carID,
 	})
 	if err != nil {
 		return nil, err
