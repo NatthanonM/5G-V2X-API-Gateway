@@ -4,8 +4,10 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,6 +31,7 @@ func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: false,
@@ -39,9 +42,14 @@ func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 		return
 	}
 
-	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyDrowsinessHeatmap(int32(hourInt))
+	t := time.Now()
+	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
+	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
+	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyDrowsinessHeatmap(&from, &to)
 
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
 			BaseResponse: models.BaseResponse{
 				Success: false,
@@ -85,7 +93,11 @@ func (r *DrowsinessController) WebAuthDrowsinessMap(c *gin.Context) {
 		return
 	}
 
-	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyAuthDrowsinessHeatmap(int32(hourInt))
+	t := time.Now()
+	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
+	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
+	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyAuthDrowsinessHeatmap(&from, &to)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{

@@ -4,7 +4,9 @@ import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/repositories"
+	"5g-v2x-api-gateway-service/internal/utils"
 	proto "5g-v2x-api-gateway-service/pkg/api"
+	"time"
 )
 
 // DrowsinessService ...
@@ -26,9 +28,10 @@ func NewDrowsinessService(repo *repositories.DrowsinessRepository, driverRepo *r
 }
 
 // GetDailyDrowsinessHeatmap ...
-func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.DrowsinessData, error) {
-	res, err := ds.DrowsinessRepository.GetDailyDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
-		Hour: hour,
+func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(from, to *time.Time) ([]*models.DrowsinessData, error) {
+	res, err := ds.DrowsinessRepository.GetDrowsinessData(&proto.GetDrowsinessDataRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
 	})
 	if err != nil {
 		return nil, err
@@ -51,7 +54,7 @@ func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.Dr
 
 // GetDrowsinessData ...
 func (ds *DrowsinessService) GetDrowsinessData(carID, username *string) ([]*models.Drowsiness, error) {
-	res, err := ds.DrowsinessRepository.GetDrowsiness(&proto.GetDrowsinessDataRequest{
+	res, err := ds.DrowsinessRepository.GetDrowsinessData(&proto.GetDrowsinessDataRequest{
 		CarId:    carID,
 		Username: username,
 	})
@@ -102,9 +105,10 @@ func (ds *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
 }
 
 // GetDailyAuthDrowsinessHeatmap ...
-func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(hour int32) ([]*models.DrowsinessData, error) {
-	res, err := ds.DrowsinessRepository.GetDailyAuthDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
-		Hour: hour,
+func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(from, to *time.Time) ([]*models.DrowsinessData, error) {
+	res, err := ds.DrowsinessRepository.GetDrowsinessData(&proto.GetDrowsinessDataRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
 	})
 	if err != nil {
 		return nil, err

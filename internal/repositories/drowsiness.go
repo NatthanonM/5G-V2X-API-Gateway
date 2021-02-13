@@ -23,20 +23,7 @@ func NewDrowsinessRepository(c *config.Config, g grpc.GRPC) *DrowsinessRepositor
 	}
 }
 
-func (r *DrowsinessRepository) GetDailyDrowsinessHeatmap(req *proto.GetHourlyDrowsinessOfCurrentDayRequest) (*proto.GetHourlyDrowsinessOfCurrentDayResponse, error) {
-	//	Connect to gRPC service
-	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
-	defer cc.Close()
-
-	res, err := proto.NewDrowsinessServiceClient(cc).GetHourlyDrowsinessOfCurrentDay(context.Background(), req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-}
-
-func (r *DrowsinessRepository) GetDrowsiness(req *proto.GetDrowsinessDataRequest) (*proto.GetDrowsinessDataResponse, error) {
+func (r *DrowsinessRepository) GetDrowsinessData(req *proto.GetDrowsinessDataRequest) (*proto.GetDrowsinessDataResponse, error) {
 	//	Connect to gRPC service
 	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
 	defer cc.Close()
@@ -68,19 +55,6 @@ func (r *DrowsinessRepository) GetNumberOfDrowsinessTimeBar() (*proto.GetNumberO
 	defer cc.Close()
 
 	res, err := proto.NewDrowsinessServiceClient(cc).GetNumberOfDrowsinessTimeBar(context.Background(), &empty.Empty{})
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-}
-
-func (r *DrowsinessRepository) GetDailyAuthDrowsinessHeatmap(req *proto.GetHourlyDrowsinessOfCurrentDayRequest) (*proto.GetHourlyDrowsinessOfCurrentDayResponse, error) {
-	//	Connect to gRPC service
-	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
-	defer cc.Close()
-
-	res, err := proto.NewDrowsinessServiceClient(cc).GetHourlyDrowsinessOfCurrentDay(context.Background(), req)
 	if err != nil {
 		return nil, err
 	}
