@@ -18,13 +18,21 @@ type Drowsiness struct {
 // DrowsinessMapResponse ...
 type DrowsinessMapResponse struct {
 	BaseResponse
-	Data []*PublicDrowsinessData `json:"data"`
+	Data []*DrowsinessData `json:"data"`
 }
 
 //// REST RESPONSE ENTITY ////
 
-// PublicDrowsinessData ...
-type PublicDrowsinessData struct {
-	Detail     AccidentDetail `json:"detail"`
-	Coordinate Coordinate     `json:"coordinate"`
+// DrowsinessData ...
+type DrowsinessData struct {
+	Detail     DrowsinessDetail `json:"detail"`
+	Coordinate Coordinate       `json:"coordinate"`
+}
+
+// DrowsinessDetail ...
+type DrowsinessDetail struct {
+	Time   time.Time `json:"time"`
+	Road   string    `json:"road"`
+	Driver *Driver   `json:"driver"`
+	Car    *Car      `json:"car"`
 }

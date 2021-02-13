@@ -89,7 +89,9 @@ func (g *GinServer) configure() {
 	{
 		auth.GET("/profile", g.Controller.AdminController.WebAuthProfile)
 		auth.POST("/logout", g.Controller.AdminController.WebAuthLogout)
+		auth.OPTIONS("/logout", g.preflight)
 		auth.POST("/driver", g.Controller.DriverController.WebAuthCreateDriver)
+		auth.OPTIONS("/driver", g.preflight)
 		auth.GET("/driver", g.Controller.DriverController.WebAuthGetDrivers)
 		auth.GET("/driver/:id", g.Controller.DriverController.WebAuthGetDriver)
 		// auth.PATCH("/driver/:id", g.Controller.AccidentController.WebAuthUpdateDriver)
@@ -97,6 +99,7 @@ func (g *GinServer) configure() {
 		auth.GET("/car", g.Controller.CarController.WebAuthGetCars)
 		auth.GET("/car/:id", g.Controller.CarController.WebAuthGetCar)
 		auth.POST("/car", g.Controller.CarController.WebAuthCreateCar)
+		auth.OPTIONS("/car", g.preflight)
 		// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
 		// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 		auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)

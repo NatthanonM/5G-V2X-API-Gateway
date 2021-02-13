@@ -16,7 +16,7 @@ type Accident struct {
 // AccidentMapResponse ...
 type AccidentMapResponse struct {
 	BaseResponse
-	Data []*PublicAccidentData `json:"data"`
+	Data []*AccidentData `json:"data"`
 }
 
 // StatCalResponse ...
@@ -45,8 +45,8 @@ type CarAccidentResponse struct {
 
 //// REST RESPONSE ENTITY ////
 
-// PublicAccidentData ...
-type PublicAccidentData struct {
+// AccidentData ...
+type AccidentData struct {
 	Detail     AccidentDetail `json:"detail"`
 	Coordinate Coordinate     `json:"coordinate"`
 }
@@ -66,6 +66,7 @@ type StatPie struct {
 // AccidentDetail ...
 type AccidentDetail struct {
 	Time   time.Time `json:"time"`
+	Road   string    `json:"road"`
 	Driver *Driver   `json:"driver"`
 	Car    *Car      `json:"car"`
 }

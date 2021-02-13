@@ -21,6 +21,7 @@ func NewAdminService(repo *repositories.AdminRepository, cf *config.Config) *Adm
 	}
 }
 
+// Register ...
 func (as *AdminService) Register(username, password string) error {
 	request := proto.RegisterAdminRequest{
 		Username: username,
@@ -32,6 +33,7 @@ func (as *AdminService) Register(username, password string) error {
 	return nil
 }
 
+// Login ...
 func (as *AdminService) Login(username, password string) (*string, error) {
 	request := proto.LoginAdminRequest{
 		Username: username,
@@ -44,6 +46,7 @@ func (as *AdminService) Login(username, password string) (*string, error) {
 	return &res.AccessToken, nil
 }
 
+// VerifyAccessToken ...
 func (as *AdminService) VerifyAccessToken(accessToken string) (*string, error) {
 	request := proto.VerifyAdminAccessTokenRequest{
 		AccessToken: accessToken,
@@ -55,6 +58,7 @@ func (as *AdminService) VerifyAccessToken(accessToken string) (*string, error) {
 	return &res.Username, nil
 }
 
+// GetProfile ...
 func (as *AdminService) GetProfile(username string) (*models.Admin, error) {
 	return &models.Admin{
 		Username: username,

@@ -24,6 +24,7 @@ func NewDrowsinessController(srv *services.Service, cf *config.Config) *Drowsine
 	}
 }
 
+// WebDrowsinessHeatmap ...
 func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
@@ -69,6 +70,7 @@ func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
 	})
 }
 
+// WebAuthDrowsinessMap ...
 func (r *DrowsinessController) WebAuthDrowsinessMap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
@@ -114,6 +116,7 @@ func (r *DrowsinessController) WebAuthDrowsinessMap(c *gin.Context) {
 	})
 }
 
+// WebDrowsinessStatTimebar ...
 func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.DrowsinessService.GetNumberOfDrowsinessTimeBar()
 
@@ -146,6 +149,7 @@ func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
 	})
 }
 
+// WebDrowsinessStatAgebar ...
 func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, models.BaseResponse{
 		Success: false,
@@ -154,6 +158,7 @@ func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
 	return
 }
 
+// WebDrowsinessStatCalendar ...
 func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatCalendar()
 
@@ -186,6 +191,7 @@ func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
 	})
 }
 
+// WebDrowsinessStatGenderpie ...
 func (r *DrowsinessController) WebDrowsinessStatGenderpie(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, models.BaseResponse{
 		Success: false,

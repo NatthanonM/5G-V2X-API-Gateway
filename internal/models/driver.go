@@ -20,7 +20,7 @@ type NewDriverBody struct {
 	Username    string    `json:"username"`
 	Password    string    `json:"password"`
 	DateOfBirth time.Time `json:"date_of_birth"`
-	Gender      int64     `json:"gender"`
+	Gender      string    `json:"gender"`
 }
 
 //// REST RESPONSE ////

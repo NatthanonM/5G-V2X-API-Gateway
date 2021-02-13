@@ -27,8 +27,9 @@ func NewAccidentService(repo *repositories.AccidentRepository, driverRepo *repos
 	}
 }
 
+// GetAccident ...
 func (as *AccidentService) GetAccident(from, to *time.Time, carID, username *string) ([]*models.Accident, error) {
-	res, err := as.AccidentRepository.GetAccidentCar(&proto.GetAccidentDataRequest{
+	res, err := as.AccidentRepository.GetAccidentData(&proto.GetAccidentDataRequest{
 		From:     utils.WrapperTime(from),
 		To:       utils.WrapperTime(to),
 		CarId:    carID,
@@ -52,17 +53,20 @@ func (as *AccidentService) GetAccident(from, to *time.Time, carID, username *str
 	return accidents, nil
 }
 
-func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.PublicAccidentData, error) {
-	res, err := as.AccidentRepository.GetDailyAccidentMap(&proto.GetHourlyAccidentOfCurrentDayRequest{
-		Hour: hour,
+// GetDailyAccidentMap ...
+func (as *AccidentService) GetDailyAccidentMap(from, to *time.Time) ([]*models.AccidentData, error) {
+	res, err := as.AccidentRepository.GetAccidentData(&proto.GetAccidentDataRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
 	})
 	if err != nil {
 		return nil, err
 	}
-	publicAccidentData := []*models.PublicAccidentData{}
+	publicAccidentData := []*models.AccidentData{}
 	for _, accident := range res.Accidents {
-		publicAccidentData = append(publicAccidentData, &models.PublicAccidentData{
+		publicAccidentData = append(publicAccidentData, &models.AccidentData{
 			Detail: models.AccidentDetail{
+				Road: accident.Road,
 				Time: accident.Time.AsTime(),
 			},
 			Coordinate: models.Coordinate{
@@ -74,6 +78,7 @@ func (as *AccidentService) GetDailyAccidentMap(hour int32) ([]*models.PublicAcci
 	return publicAccidentData, nil
 }
 
+// GetAccidentStatCalendar ...
 func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) {
 	res, err := as.AccidentRepository.GetAccidentStatCalendar()
 	if err != nil {
@@ -89,6 +94,7 @@ func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) 
 	return accidents, nil
 }
 
+// GetNumberOfAccidentTimeBar ...
 func (as *AccidentService) GetNumberOfAccidentTimeBar() ([]int32, error) {
 	res, err := as.AccidentRepository.GetNumberOfAccidentTimeBar()
 	if err != nil {
@@ -99,6 +105,7 @@ func (as *AccidentService) GetNumberOfAccidentTimeBar() ([]int32, error) {
 	return accidents, nil
 }
 
+// GetNumberOfAccidentStreet ...
 func (as *AccidentService) GetNumberOfAccidentStreet() (*models.StatPie, error) {
 	res, err := as.AccidentRepository.GetNumberOfAccidentStreet()
 	if err != nil {
@@ -113,14 +120,16 @@ func (as *AccidentService) GetNumberOfAccidentStreet() (*models.StatPie, error) 
 	return accidents, nil
 }
 
-func (as *AccidentService) GetDailyAuthAccidentMap(hour int32) ([]*models.PublicAccidentData, error) {
-	res, err := as.AccidentRepository.GetDailyAccidentMap(&proto.GetHourlyAccidentOfCurrentDayRequest{
-		Hour: hour,
+// GetDailyAuthAccidentMap ...
+func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*models.AccidentData, error) {
+	res, err := as.AccidentRepository.GetAccidentData(&proto.GetAccidentDataRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
 	})
 	if err != nil {
 		return nil, err
 	}
-	accidents := []*models.PublicAccidentData{}
+	accidents := []*models.AccidentData{}
 	for _, accident := range res.Accidents {
 		// TODO#1: call user service to get driver id by username
 		driver, err := as.DriverRepository.GetDriverByUsername(&proto.GetDriverByUsernameRequest{
@@ -132,14 +141,15 @@ func (as *AccidentService) GetDailyAuthAccidentMap(hour int32) ([]*models.Public
 		// TODO#2: call data-management service to get driver id by username
 		car, err := as.CarRepository.GetCar(&proto.GetCarRequest{
 			// TODO: change to accident.CarId when carId is valid
-			CarId: "83e9b831-53f2-4e22-a4b7-039d59c69d62",
+			CarId: accident.CarId,
 		})
 		if err != nil {
 			return nil, err
 		}
-		accidents = append(accidents, &models.PublicAccidentData{
+		accidents = append(accidents, &models.AccidentData{
 			Detail: models.AccidentDetail{
 				Time: accident.Time.AsTime(),
+				Road: accident.Road,
 				Driver: &models.Driver{
 					DriverID: driver.DriverId,
 				},

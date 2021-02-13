@@ -21,6 +21,7 @@ func NewCarService(repo *repositories.CarRepository, cf *config.Config) *CarServ
 	}
 }
 
+// RegisterNewCar ...
 func (cs *CarService) RegisterNewCar(carDetail, vehicleRegistrationNumber string) (*string, error) {
 	request := proto.RegisterNewCarRequest{
 		CarDetail:                 carDetail,
@@ -34,6 +35,7 @@ func (cs *CarService) RegisterNewCar(carDetail, vehicleRegistrationNumber string
 	return &res.CarId, nil
 }
 
+// GetCarList ...
 func (cs *CarService) GetCarList() ([]*models.Car, error) {
 	res, err := cs.CarRepository.GetCarList()
 	if err != nil {
@@ -53,6 +55,7 @@ func (cs *CarService) GetCarList() ([]*models.Car, error) {
 	return carList, nil
 }
 
+// GetCar ...
 func (cs *CarService) GetCar(carID string) (*models.Car, error) {
 	car, err := cs.CarRepository.GetCar(&proto.GetCarRequest{
 		CarId: carID,

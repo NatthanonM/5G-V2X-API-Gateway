@@ -23,10 +23,11 @@ func NewDriverService(repo *repositories.DriverRepository, cf *config.Config) *D
 	}
 }
 
+// AddNewDriver ...
 func (ds *DriverService) AddNewDriver(
 	firstname, lastname, username, password string,
 	dateOfBirth time.Time,
-	gender int64) (*string, error) {
+	gender int) (*string, error) {
 	request := proto.AddNewDriverRequest{
 		Firstname:   firstname,
 		Lastname:    lastname,
@@ -42,6 +43,7 @@ func (ds *DriverService) AddNewDriver(
 	return &res.DriverId, nil
 }
 
+// GetAllDriver ...
 func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
 	drivers, err := ds.DriverRepository.GetAllDriver()
 	if err != nil {
@@ -60,6 +62,7 @@ func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
 	return driverList, nil
 }
 
+// GetDriver ...
 func (ds *DriverService) GetDriver(driverID string) (*models.Driver, error) {
 	driver, err := ds.DriverRepository.GetDriver(&proto.GetDriverRequest{
 		DriverId: driverID,

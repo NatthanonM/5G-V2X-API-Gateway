@@ -24,11 +24,12 @@ func NewCarController(srv *services.Service, cf *config.Config) *CarController {
 	}
 }
 
+// WebAuthCreateCar ...
 func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 	var temp models.NewCarBody
 	c.BindJSON(&temp)
 
-	if temp.CarDetail == "" || temp.VehicleRegistrationNumber == "" {
+	if temp.VehicleRegistrationNumber == "" {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
 			Success: false,
 			Message: "Invalid parameter.",
@@ -48,7 +49,7 @@ func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 	}
 
 	// Success
-	c.JSON(http.StatusOK, models.WebAuthCreateCar{
+	c.JSON(http.StatusCreated, models.WebAuthCreateCar{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: "Register car successful.",
@@ -59,6 +60,7 @@ func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 	})
 }
 
+// WebAuthGetCars ...
 func (cc *CarController) WebAuthGetCars(c *gin.Context) {
 	carList, err := cc.Services.ServiceGateway.CarService.GetCarList()
 
@@ -81,6 +83,7 @@ func (cc *CarController) WebAuthGetCars(c *gin.Context) {
 	})
 }
 
+// WebAuthGetCar ...
 func (cc *CarController) WebAuthGetCar(c *gin.Context) {
 	carID := c.Param("id")
 	car, err := cc.Services.ServiceGateway.CarService.GetCar(carID)

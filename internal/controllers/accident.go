@@ -32,6 +32,7 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 // 	})
 // }
 
+// CarAccident ...
 func (r *AccidentController) CarAccident(c *gin.Context) {
 	from := time.Now().Add(-(60 * time.Minute))
 	to := time.Now()
@@ -67,6 +68,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 	})
 }
 
+// WebAccidentMap ...
 func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
@@ -81,7 +83,11 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 		return
 	}
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(int32(hourInt))
+	t := time.Now()
+	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
+	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
+	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(&from, &to)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
@@ -112,6 +118,7 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	})
 }
 
+// WebAccidentHeatmap ...
 func (r *AccidentController) WebAccidentHeatmap(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, models.BaseResponse{
 		Success: false,
@@ -120,6 +127,7 @@ func (r *AccidentController) WebAccidentHeatmap(c *gin.Context) {
 	return
 }
 
+// WebAccidentStatCalendar ...
 func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatCalendar()
@@ -151,9 +159,9 @@ func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
 		},
 		Data: res,
 	})
-
 }
 
+// WebAccidentStatRoadpie ...
 func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentStreet()
 
@@ -186,6 +194,7 @@ func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 	})
 }
 
+// WebAccidentStatTimebar ...
 func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar()
 
@@ -218,6 +227,7 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	})
 }
 
+// WebAccidentStatAgebar ...
 func (r *AccidentController) WebAccidentStatAgebar(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, models.BaseResponse{
 		Success: false,
@@ -226,6 +236,7 @@ func (r *AccidentController) WebAccidentStatAgebar(c *gin.Context) {
 	return
 }
 
+// WebAccidentStatGenderbar ...
 func (r *AccidentController) WebAccidentStatGenderbar(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, models.BaseResponse{
 		Success: false,
@@ -234,6 +245,7 @@ func (r *AccidentController) WebAccidentStatGenderbar(c *gin.Context) {
 	return
 }
 
+// WebAuthAccidentMap ...
 func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 	hour := c.Param("hour")
 	hourInt, err := strconv.Atoi(hour)
@@ -248,7 +260,11 @@ func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 		return
 	}
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(int32(hourInt))
+	t := time.Now()
+	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
+	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
+	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(&from, &to)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{

@@ -25,13 +25,14 @@ func NewAdminController(srv *services.Service, cf *config.Config) *AdminControll
 	}
 }
 
-func (r *AdminController) setAccessTokenCookie(accessToken string, c *gin.Context) {
-	lifetimeDuration, _ := time.ParseDuration(r.config.AccessTokenLifetime)
+func (ac *AdminController) setAccessTokenCookie(accessToken string, c *gin.Context) {
+	lifetimeDuration, _ := time.ParseDuration(ac.config.AccessTokenLifetime)
 	// convert duration(ns) -> seconds(s)
 	lifetimeDurationSeconds := int(lifetimeDuration.Seconds())
-	c.SetCookie("accessToken", accessToken, lifetimeDurationSeconds, "/", r.config.WebsiteDomain, false, true)
+	c.SetCookie("accessToken", accessToken, lifetimeDurationSeconds, "/", ac.config.WebsiteDomain, false, true)
 }
 
+// WebAuthRegister ...
 func (ac *AdminController) WebAuthRegister(c *gin.Context) {
 	var temp models.AdminRegisterBody
 	c.BindJSON(&temp)
@@ -54,7 +55,7 @@ func (ac *AdminController) WebAuthRegister(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
+	c.JSON(http.StatusCreated, models.AccidentMapResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: "Register successful.",
@@ -63,6 +64,7 @@ func (ac *AdminController) WebAuthRegister(c *gin.Context) {
 	})
 }
 
+// WebAuthLogin ...
 func (ac *AdminController) WebAuthLogin(c *gin.Context) {
 	var temp models.AdminLoginBody
 	c.BindJSON(&temp)
@@ -89,12 +91,13 @@ func (ac *AdminController) WebAuthLogin(c *gin.Context) {
 	ac.setAccessTokenCookie(*accessToken, c)
 
 	// Success
-	c.JSON(http.StatusOK, models.BaseResponse{
+	c.JSON(http.StatusCreated, models.BaseResponse{
 		Success: true,
 		Message: "login successful",
 	})
 }
 
+// WebAuthLogout ...
 func (ac *AdminController) WebAuthLogout(c *gin.Context) {
 	c.SetCookie("accessToken", "", -1, "/", ac.config.WebsiteDomain, false, true)
 
@@ -105,6 +108,7 @@ func (ac *AdminController) WebAuthLogout(c *gin.Context) {
 	})
 }
 
+// WebAuthProfile ...
 func (ac *AdminController) WebAuthProfile(c *gin.Context) {
 
 	ctxData, _ := c.Get(utils.UsernameCtxKey)

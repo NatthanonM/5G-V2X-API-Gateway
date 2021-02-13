@@ -6,7 +6,9 @@ import (
 	"5g-v2x-api-gateway-service/internal/services"
 	"5g-v2x-api-gateway-service/internal/utils"
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,9 +27,18 @@ func NewDriverController(srv *services.Service, cf *config.Config) *DriverContro
 	}
 }
 
+// WebAuthCreateDriver ...
 func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 	var temp models.NewDriverBody
-	c.BindJSON(&temp)
+	err := c.BindJSON(&temp)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid parameter.",
+		})
+		return
+	}
 
 	if temp.Username == "" || temp.Password == "" {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
@@ -36,9 +47,18 @@ func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 		})
 		return
 	}
+	genderInt, err := strconv.Atoi(temp.Gender)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid parameter: gender.",
+		})
+		return
+	}
 
 	driverID, err := dc.Services.ServiceGateway.DriverService.AddNewDriver(
-		temp.Firstname, temp.Lastname, temp.Username, temp.Password, temp.DateOfBirth, temp.Gender)
+		temp.Firstname, temp.Lastname, temp.Username, temp.Password, temp.DateOfBirth, genderInt)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
@@ -50,7 +70,7 @@ func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 	}
 
 	// Success
-	c.JSON(http.StatusOK, models.WebAuthCreateDriverResponse{
+	c.JSON(http.StatusCreated, models.WebAuthCreateDriverResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: "Create driver successful.",
@@ -61,6 +81,7 @@ func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 	})
 }
 
+// WebAuthGetDrivers ...
 func (dc *DriverController) WebAuthGetDrivers(c *gin.Context) {
 	drivers, err := dc.Services.ServiceGateway.DriverService.GetAllDriver()
 	if err != nil {
@@ -82,6 +103,7 @@ func (dc *DriverController) WebAuthGetDrivers(c *gin.Context) {
 	})
 }
 
+// WebAuthGetDriver ...
 func (dc *DriverController) WebAuthGetDriver(c *gin.Context) {
 	driverID := c.Param("id")
 	driver, err := dc.Services.ServiceGateway.DriverService.GetDriver(driverID)
@@ -104,6 +126,7 @@ func (dc *DriverController) WebAuthGetDriver(c *gin.Context) {
 	})
 }
 
+// WebAuthDriverAccident ...
 func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 	driverID := c.Param("id")
 
@@ -150,6 +173,7 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 	})
 }
 
+// WebAuthDriverDrowsiness ...
 func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 	driverID := c.Param("id")
 

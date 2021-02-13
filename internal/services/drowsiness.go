@@ -25,17 +25,19 @@ func NewDrowsinessService(repo *repositories.DrowsinessRepository, driverRepo *r
 	}
 }
 
-func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.PublicDrowsinessData, error) {
+// GetDailyDrowsinessHeatmap ...
+func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.DrowsinessData, error) {
 	res, err := ds.DrowsinessRepository.GetDailyDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
 		Hour: hour,
 	})
 	if err != nil {
 		return nil, err
 	}
-	publicDrowsinessData := []*models.PublicDrowsinessData{}
+	publicDrowsinessData := []*models.DrowsinessData{}
 	for _, drowsiness := range res.Drowsinesses {
-		publicDrowsinessData = append(publicDrowsinessData, &models.PublicDrowsinessData{
-			Detail: models.AccidentDetail{
+		publicDrowsinessData = append(publicDrowsinessData, &models.DrowsinessData{
+			Detail: models.DrowsinessDetail{
+				Road: drowsiness.Road,
 				Time: drowsiness.Time.AsTime(),
 			},
 			Coordinate: models.Coordinate{
@@ -47,6 +49,7 @@ func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(hour int32) ([]*models.Pu
 	return publicDrowsinessData, nil
 }
 
+// GetDrowsinessData ...
 func (ds *DrowsinessService) GetDrowsinessData(carID, username *string) ([]*models.Drowsiness, error) {
 	res, err := ds.DrowsinessRepository.GetDrowsiness(&proto.GetDrowsinessDataRequest{
 		CarId:    carID,
@@ -71,8 +74,9 @@ func (ds *DrowsinessService) GetDrowsinessData(carID, username *string) ([]*mode
 	return drowsinessData, nil
 }
 
-func (as *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, error) {
-	res, err := as.DrowsinessRepository.GetDrowsinessStatCalendar()
+// GetDrowsinessStatCalendar ...
+func (ds *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, error) {
+	res, err := ds.DrowsinessRepository.GetDrowsinessStatCalendar()
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +90,9 @@ func (as *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, err
 	return drowsinesses, nil
 }
 
-func (as *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
-	res, err := as.DrowsinessRepository.GetNumberOfDrowsinessTimeBar()
+// GetNumberOfDrowsinessTimeBar ...
+func (ds *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
+	res, err := ds.DrowsinessRepository.GetNumberOfDrowsinessTimeBar()
 	if err != nil {
 		return nil, err
 	}
@@ -95,33 +100,36 @@ func (as *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
 
 	return drowsinesss, nil
 }
-func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(hour int32) ([]*models.PublicDrowsinessData, error) {
+
+// GetDailyAuthDrowsinessHeatmap ...
+func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(hour int32) ([]*models.DrowsinessData, error) {
 	res, err := ds.DrowsinessRepository.GetDailyAuthDrowsinessHeatmap(&proto.GetHourlyDrowsinessOfCurrentDayRequest{
 		Hour: hour,
 	})
 	if err != nil {
 		return nil, err
 	}
-	drowsinessMapData := []*models.PublicDrowsinessData{}
-	for _, accident := range res.Drowsinesses {
+	drowsinessMapData := []*models.DrowsinessData{}
+	for _, drowsiness := range res.Drowsinesses {
 		// TODO#1: call user service to get driver id by username
 		driver, err := ds.DriverRepository.GetDriverByUsername(&proto.GetDriverByUsernameRequest{
-			Username: accident.Username,
+			Username: drowsiness.Username,
 		})
 		if err != nil {
 			return nil, err
 		}
 		// TODO#2: call data-management service to get driver id by username
 		car, err := ds.CarRepository.GetCar(&proto.GetCarRequest{
-			// TODO: change to accident.CarId when carId is valid
-			CarId: "83e9b831-53f2-4e22-a4b7-039d59c69d62",
+			// TODO: change to drowsiness.CarId when carId is valid
+			CarId: drowsiness.CarId,
 		})
 		if err != nil {
 			return nil, err
 		}
-		drowsinessMapData = append(drowsinessMapData, &models.PublicDrowsinessData{
-			Detail: models.AccidentDetail{
-				Time: accident.Time.AsTime(),
+		drowsinessMapData = append(drowsinessMapData, &models.DrowsinessData{
+			Detail: models.DrowsinessDetail{
+				Road: drowsiness.Road,
+				Time: drowsiness.Time.AsTime(),
 				Driver: &models.Driver{
 					DriverID: driver.DriverId,
 				},
@@ -133,8 +141,8 @@ func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(hour int32) ([]*model
 				},
 			},
 			Coordinate: models.Coordinate{
-				Lat: accident.Latitude,
-				Lng: accident.Longitude,
+				Lat: drowsiness.Latitude,
+				Lng: drowsiness.Longitude,
 			},
 		})
 	}
