@@ -106,7 +106,6 @@ func (g *GinServer) configure() {
 		auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
 		auth.OPTIONS("/accident/map/:hour", g.preflight)
 		auth.GET("/drowsiness/map/:hour", g.Controller.DrowsinessController.WebAuthDrowsinessMap)
-		auth.OPTIONS("/accident/map/:hour", g.preflight)
 		auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
 		auth.GET("/driver/:id/accident/stat/timebar", g.Controller.AccidentController.WebAuthDriverAccidentStatTimebar)
 		auth.GET("/driver/:id/drowsiness", g.Controller.DriverController.WebAuthDriverDrowsiness)
