@@ -150,17 +150,36 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 		return
 	}
 
-	privateAccidentData := []*models.Accident{}
+	privateAccidentDatas := []*struct {
+		Accident *models.Accident `json:"accident"`
+		Car      *models.Car      `json:"car"`
+	}{}
 
 	for _, accident := range accidents {
-		privateAccidentData = append(privateAccidentData, &models.Accident{
+		privateAccidentData := struct {
+			Accident *models.Accident `json:"accident"`
+			Car      *models.Car      `json:"car"`
+		}{}
+		privateAccidentData.Accident = &models.Accident{
 			Time:      accident.Time,
 			CarID:     accident.CarID,
 			Username:  accident.Username,
 			Latitude:  accident.Latitude,
 			Longitude: accident.Longitude,
 			Road:      accident.Road,
-		})
+		}
+		car, err := dc.Services.ServiceGateway.CarService.GetCar(accident.CarID)
+		if err == nil {
+			privateAccidentData.Car = &models.Car{
+				CarID:                     accident.CarID,
+				VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+				CarDetail:                 car.CarDetail,
+				RegisteredAt:              car.RegisteredAt,
+				MfgAt:                     car.MfgAt,
+			}
+		}
+
+		privateAccidentDatas = append(privateAccidentDatas, &privateAccidentData)
 	}
 
 	// Success
@@ -169,7 +188,7 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 			Success: true,
 			Message: fmt.Sprintf(`Get accidents of %s successful.`, driver.Username),
 		},
-		Data: accidents,
+		Data: privateAccidentDatas,
 	})
 }
 

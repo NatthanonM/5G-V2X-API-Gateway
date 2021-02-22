@@ -7,15 +7,16 @@ type Car struct {
 	VehicleRegistrationNumber string    `json:"vehicle_registration_number"`
 	CarDetail                 string    `json:"car_detail"`
 	RegisteredAt              time.Time `json:"registered_at"`
-	CreatedAt                 time.Time `json:"created_at"`
+	MfgAt                     time.Time `json:"mfg_at"`
 }
 
 //// REST BODY ////
 
 // NewCarBody ...
 type NewCarBody struct {
-	VehicleRegistrationNumber string `json:"vehicle_registration_number"`
-	CarDetail                 string `json:"car_detail"`
+	VehicleRegistrationNumber string     `json:"vehicle_registration_number"`
+	CarDetail                 string     `json:"car_detail"`
+	MfgAt                     *time.Time `json:"mfg_at"`
 }
 
 //// REST RESPONSE ////

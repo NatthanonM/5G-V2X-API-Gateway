@@ -49,7 +49,7 @@ func (cs *CarService) GetCarList() ([]*models.Car, error) {
 			VehicleRegistrationNumber: car.VehicleRegistrationNumber,
 			CarDetail:                 car.CarDetail,
 			RegisteredAt:              car.RegisteredAt.AsTime(),
-			CreatedAt:                 car.CreatedAt.AsTime(),
+			MfgAt:                     car.MfgAt.AsTime(),
 		})
 	}
 	return carList, nil
@@ -69,6 +69,6 @@ func (cs *CarService) GetCar(carID string) (*models.Car, error) {
 		VehicleRegistrationNumber: car.VehicleRegistrationNumber,
 		CarDetail:                 car.CarDetail,
 		RegisteredAt:              car.RegisteredAt.AsTime(),
-		CreatedAt:                 car.CreatedAt.AsTime(),
+		MfgAt:                     car.MfgAt.AsTime(),
 	}, nil
 }

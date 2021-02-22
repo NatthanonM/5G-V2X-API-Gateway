@@ -53,7 +53,10 @@ type WebAuthCreateDriverResponse struct {
 // WebAuthDriverAccidentResponse ...
 type WebAuthDriverAccidentResponse struct {
 	BaseResponse
-	Data []*Accident `json:"data"`
+	Data []*struct {
+		Accident *Accident `json:"accident"`
+		Car      *Car      `json:"car"`
+	} `json:"data"`
 }
 
 // WebAuthDriverDrowsinessResponse ...

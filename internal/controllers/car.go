@@ -29,10 +29,10 @@ func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 	var temp models.NewCarBody
 	c.BindJSON(&temp)
 
-	if temp.VehicleRegistrationNumber == "" {
+	if temp.VehicleRegistrationNumber == "" || temp.MfgAt == nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
 			Success: false,
-			Message: "Invalid parameter.",
+			Message: "Invalid body.",
 		})
 		return
 	}
