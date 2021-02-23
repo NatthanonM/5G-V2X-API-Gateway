@@ -43,10 +43,8 @@ func NewGinServer(
 func (g *GinServer) configure() {
 	g.route = gin.Default()
 
-	api := g.route.Group("/api")
-
 	if g.config.Mode != "Development" {
-		api.Use(cors.New(cors.Config{
+		g.route.Use(cors.New(cors.Config{
 			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
 			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
 			// AllowAllOrigins:  true,
@@ -55,6 +53,7 @@ func (g *GinServer) configure() {
 			AllowOrigins:     []string{g.config.WebsiteOrigin},
 		}))
 	}
+	api := g.route.Group("/api")
 
 	// drowsiness := api.Group("/drowsiness")
 
@@ -104,7 +103,6 @@ func (g *GinServer) configure() {
 		// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
 		// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 		auth.GET("/accident/map/:hour", g.Controller.AccidentController.WebAuthAccidentMap)
-		auth.OPTIONS("/accident/map/:hour", g.preflight)
 		auth.GET("/drowsiness/map/:hour", g.Controller.DrowsinessController.WebAuthDrowsinessMap)
 		auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
 		auth.GET("/driver/:id/accident/stat/timebar", g.Controller.AccidentController.WebAuthDriverAccidentStatTimebar)
