@@ -40,6 +40,20 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 
 	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&from, &to, nil, nil)
 
+	publicAccidentData := []*models.AccidentData{}
+	for _, accident := range res {
+		publicAccidentData = append(publicAccidentData, &models.AccidentData{
+			Detail: models.AccidentDetail{
+				Road: accident.Road,
+				Time: accident.Time,
+			},
+			Coordinate: models.Coordinate{
+				Lat: accident.Latitude,
+				Lng: accident.Longitude,
+			},
+		})
+	}
+
 	if err != nil {
 		customError := utils.NewCustomError(err)
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
@@ -54,7 +68,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 				Success: true,
 				Message: "No accident data.",
 			},
-			Data: res,
+			Data: publicAccidentData,
 		})
 		return
 	}
@@ -63,7 +77,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 			Success: true,
 			Message: "Get accident data successful.",
 		},
-		Data: res,
+		Data: publicAccidentData,
 	})
 }
 

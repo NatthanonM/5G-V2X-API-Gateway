@@ -40,7 +40,7 @@ type StatPieResponse struct {
 // CarAccidentResponse ...
 type CarAccidentResponse struct {
 	BaseResponse
-	Data []*Accident `json:"data"`
+	Data []*AccidentData `json:"data"`
 }
 
 type WebAuthDriverAccidentStatTimebarResponse struct {
