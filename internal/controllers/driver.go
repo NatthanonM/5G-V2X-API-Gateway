@@ -40,7 +40,7 @@ func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 		return
 	}
 
-	if temp.Username == "" || temp.Password == "" {
+	if temp.Username == "" || temp.Password == "" || temp.DateOfBirth == nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
 			Success: false,
 			Message: "Invalid parameter.",
@@ -58,7 +58,7 @@ func (dc *DriverController) WebAuthCreateDriver(c *gin.Context) {
 	}
 
 	driverID, err := dc.Services.ServiceGateway.DriverService.AddNewDriver(
-		temp.Firstname, temp.Lastname, temp.Username, temp.Password, temp.DateOfBirth, genderInt)
+		temp.Firstname, temp.Lastname, temp.Username, temp.Password, *temp.DateOfBirth, genderInt)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
