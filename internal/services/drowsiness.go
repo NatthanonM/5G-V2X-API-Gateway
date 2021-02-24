@@ -135,7 +135,12 @@ func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(from, to *time.Time) 
 				Road: drowsiness.Road,
 				Time: drowsiness.Time.AsTime(),
 				Driver: &models.Driver{
-					DriverID: driver.DriverId,
+					DriverID:    driver.DriverId,
+					Firstname:   driver.Firstname,
+					Lastname:    driver.Lastname,
+					DateOfBirth: driver.DateOfBirth.AsTime(),
+					Gender:      driver.Gender,
+					Username:    driver.Username,
 				},
 				Car: &models.Car{
 					CarID:                     car.CarId,
