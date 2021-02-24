@@ -6,7 +6,6 @@ import (
 	"5g-v2x-api-gateway-service/internal/services"
 	"5g-v2x-api-gateway-service/internal/utils"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,8 +35,8 @@ func (cc *CarController) WebAuthCreateCar(c *gin.Context) {
 		})
 		return
 	}
-
-	carID, err := cc.Services.ServiceGateway.CarService.RegisterNewCar(temp.CarDetail, temp.VehicleRegistrationNumber)
+	MfgAt := temp.MfgAt.UTC()
+	carID, err := cc.Services.ServiceGateway.CarService.RegisterNewCar(temp.CarDetail, temp.VehicleRegistrationNumber, MfgAt)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
