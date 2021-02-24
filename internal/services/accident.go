@@ -151,7 +151,12 @@ func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*mode
 				Time: accident.Time.AsTime(),
 				Road: accident.Road,
 				Driver: &models.Driver{
-					DriverID: driver.DriverId,
+					DriverID:    driver.DriverId,
+					Firstname:   driver.Firstname,
+					Lastname:    driver.Lastname,
+					DateOfBirth: driver.DateOfBirth.AsTime(),
+					Gender:      driver.Gender,
+					Username:    driver.Username,
 				},
 				Car: &models.Car{
 					CarID:                     car.CarId,
