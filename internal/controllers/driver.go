@@ -155,6 +155,8 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 		Car      *models.Car      `json:"car"`
 	}{}
 
+	carSet := make(map[string]*models.Car)
+
 	for _, accident := range accidents {
 		privateAccidentData := struct {
 			Accident *models.Accident `json:"accident"`
@@ -168,17 +170,25 @@ func (dc *DriverController) WebAuthDriverAccident(c *gin.Context) {
 			Longitude: accident.Longitude,
 			Road:      accident.Road,
 		}
-		car, err := dc.Services.ServiceGateway.CarService.GetCar(accident.CarID)
-		if err == nil {
-			privateAccidentData.Car = &models.Car{
-				CarID:                     accident.CarID,
-				VehicleRegistrationNumber: car.VehicleRegistrationNumber,
-				CarDetail:                 car.CarDetail,
-				RegisteredAt:              car.RegisteredAt,
-				MfgAt:                     car.MfgAt,
+		_, exists := carSet[accident.CarID]
+		if !exists {
+			if car, err := dc.Services.ServiceGateway.CarService.GetCar(accident.CarID); err == nil {
+				carSet[accident.CarID] = car
+			} else {
+				carSet[accident.CarID] = &models.Car{
+					CarID:                     accident.CarID,
+					VehicleRegistrationNumber: "Unknown car",
+					CarDetail:                 "Unknown car",
+				}
 			}
 		}
-
+		privateAccidentData.Car = &models.Car{
+			CarID:                     accident.CarID,
+			VehicleRegistrationNumber: carSet[accident.CarID].VehicleRegistrationNumber,
+			CarDetail:                 carSet[accident.CarID].CarDetail,
+			RegisteredAt:              carSet[accident.CarID].RegisteredAt,
+			MfgAt:                     carSet[accident.CarID].MfgAt,
+		}
 		privateAccidentDatas = append(privateAccidentDatas, &privateAccidentData)
 	}
 
