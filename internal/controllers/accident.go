@@ -329,3 +329,38 @@ func (r *AccidentController) WebAuthDriverAccidentStatTimebar(c *gin.Context) {
 		Data: res,
 	})
 }
+
+func (r *AccidentController) WebAccidentStatRoadToptenYear(c *gin.Context) {
+	year := c.Param("year")
+	i, err := strconv.Atoi(year)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid year",
+		})
+		return
+	}
+
+	fromTime := time.Date(i, time.Month(1), 1, 0, 0, 0, 1, time.UTC)
+	toTime := time.Date(i, time.Month(12), 31, 23, 59, 59, 999999999, time.UTC)
+
+	var n int64
+	n = 10
+	res, err := r.Services.ServiceGateway.AccidentService.GetStatRoadToptenYear(&fromTime, &toTime, &n)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, models.WebAccidentStatRoadToptenYearResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident timebar successful.",
+		},
+		Data: res,
+	})
+}

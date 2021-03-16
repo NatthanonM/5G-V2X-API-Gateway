@@ -48,6 +48,11 @@ type WebAuthDriverAccidentStatTimebarResponse struct {
 	Data []int64 `json:"data"`
 }
 
+type WebAccidentStatRoadToptenYearResponse struct {
+	BaseResponse
+	Data []StatRoadToptenYear `json:"data"`
+}
+
 //// REST RESPONSE ENTITY ////
 
 // AccidentData ...
@@ -80,4 +85,9 @@ type AccidentDetail struct {
 type Coordinate struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
+}
+
+type StatRoadToptenYear struct {
+	RoadName      string `json:"road_name"`
+	AccidentCount int64  `json:"accident_count"`
 }

@@ -100,3 +100,16 @@ func (r *AccidentRepository) GetAccidentStatGroupByHour(req *proto.GetAccidentSt
 
 	return res, nil
 }
+
+func (r *AccidentRepository) GetTopNRoad(req *proto.GetTopNRoadRequest) (*proto.GetTopNRoadResponse, error) {
+	//	Connect to gRPC service
+	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	res, err := proto.NewAccidentServiceClient(cc).GetTopNRoad(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

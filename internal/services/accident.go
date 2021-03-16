@@ -186,3 +186,22 @@ func (as *AccidentService) GetAccidentStatTimebar(from, to *time.Time, driverUse
 	}
 	return accidentCountByHour.Accidents, nil
 }
+
+func (as *AccidentService) GetStatRoadToptenYear(from, to *time.Time, n *int64) ([]models.StatRoadToptenYear, error) {
+	topNAccidentRoadResponse, err := as.AccidentRepository.GetTopNRoad(&proto.GetTopNRoadRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
+		N:    n,
+	})
+	if err != nil {
+		return []models.StatRoadToptenYear{}, err
+	}
+	var topNAccidentRoad []models.StatRoadToptenYear
+	for _, v := range topNAccidentRoadResponse.TopNRoad {
+		topNAccidentRoad = append(topNAccidentRoad, models.StatRoadToptenYear{
+			RoadName:      v.RoadName,
+			AccidentCount: v.AccidentCount,
+		})
+	}
+	return topNAccidentRoad, nil
+}
