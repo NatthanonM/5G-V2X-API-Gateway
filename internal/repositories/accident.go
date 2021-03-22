@@ -49,12 +49,14 @@ func (r *AccidentRepository) GetAccidentData(req *proto.GetAccidentDataRequest) 
 	return res, nil
 }
 
-func (r *AccidentRepository) GetAccidentStatCalendar() (*proto.GetNumberOfAccidentToCalendarResponse, error) {
+func (r *AccidentRepository) GetAccidentStatCalendar(year *int64) (*proto.GetNumberOfAccidentToCalendarResponse, error) {
 	//	Connect to gRPC service
 	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
 	defer cc.Close()
 
-	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentToCalendar(context.Background(), &empty.Empty{})
+	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentToCalendar(context.Background(), &proto.GetNumberOfAccidentToCalendarRequest{
+		Year: year,
+	})
 	if err != nil {
 		return nil, err
 	}

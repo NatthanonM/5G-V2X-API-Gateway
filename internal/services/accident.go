@@ -79,8 +79,8 @@ func (as *AccidentService) GetDailyAccidentMap(from, to *time.Time) ([]*models.A
 }
 
 // GetAccidentStatCalendar ...
-func (as *AccidentService) GetAccidentStatCalendar() ([]*models.StatCal, error) {
-	res, err := as.AccidentRepository.GetAccidentStatCalendar()
+func (as *AccidentService) GetAccidentStatCalendar(year int64) ([]*models.StatCal, error) {
+	res, err := as.AccidentRepository.GetAccidentStatCalendar(&year)
 	if err != nil {
 		return nil, err
 	}

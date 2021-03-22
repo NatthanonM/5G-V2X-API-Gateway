@@ -129,19 +129,19 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	})
 }
 
-// WebAccidentHeatmap ...
-func (r *AccidentController) WebAccidentHeatmap(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
-	})
-	return
-}
-
 // WebAccidentStatCalendar ...
 func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
+	year := c.Param("year")
+	i, err := strconv.Atoi(year)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid year",
+		})
+		return
+	}
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatCalendar()
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccidentStatCalendar(int64(i))
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
