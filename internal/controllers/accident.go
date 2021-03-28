@@ -220,7 +220,7 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 		})
 		return
 	}
-	starttm := time.Unix(i, 0)
+	starttm := time.Unix(i, 0).UTC()
 
 	i, err = strconv.ParseInt(stop, 10, 64)
 	if err != nil {
@@ -230,7 +230,7 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 		})
 		return
 	}
-	stoptm := time.Unix(i, 0)
+	stoptm := time.Unix(i, 0).UTC()
 
 	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar(&starttm, &stoptm)
 
@@ -258,6 +258,65 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 			Message: "Get accident data successful.",
 		},
 		Data: res,
+	})
+}
+
+// WebAccidentCount
+func (r *AccidentController) WebAccidentCount(c *gin.Context) {
+	start := c.Query("date")
+	mode := c.Query("mode")
+
+	i, err := strconv.ParseInt(start, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Date is invalid",
+		})
+		return
+	}
+	starttm := time.Unix(i, 0).UTC()
+
+	var stoptm time.Time
+
+	switch mode {
+	case "date":
+		stoptm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+1,
+			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
+	case "week":
+		stoptm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+7,
+			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
+	case "month":
+		stoptm = time.Date(starttm.Year(), starttm.Month()+1, starttm.Day(),
+			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
+	case "quarter":
+		stoptm = time.Date(starttm.Year(), starttm.Month()+3, starttm.Day(),
+			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
+	case "year":
+		stoptm = time.Date(starttm.Year()+1, starttm.Month(), starttm.Day(),
+			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
+	default:
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Mode is invalid",
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&starttm, &stoptm, nil, nil)
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, models.AccidentCountResponse{
+		BaseResponse: models.BaseResponse{
+			Success: true,
+			Message: "Get accident count successful.",
+		},
+		Data: int64(len(res)),
 	})
 }
 

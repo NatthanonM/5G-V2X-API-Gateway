@@ -53,6 +53,11 @@ type WebAccidentStatRoadToptenYearResponse struct {
 	Data []StatRoadToptenYear `json:"data"`
 }
 
+type AccidentCountResponse struct {
+	BaseResponse
+	Data int64 `json:"data"`
+}
+
 //// REST RESPONSE ENTITY ////
 
 // AccidentData ...

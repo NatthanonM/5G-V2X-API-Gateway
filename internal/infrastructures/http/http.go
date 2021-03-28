@@ -72,6 +72,7 @@ func (g *GinServer) configure() {
 	accident.GET("/stat/roadpie", g.Controller.AccidentController.WebAccidentStatRoadpie)
 	accident.GET("/stat/road/topten/:year", g.Controller.AccidentController.WebAccidentStatRoadToptenYear)
 	accident.GET("/stat/timebar", g.Controller.AccidentController.WebAccidentStatTimebar)
+	accident.GET("/stat/count", g.Controller.AccidentController.WebAccidentCount)
 	//// FOR DROWSINESS WEB
 	drowsiness := web.Group("/drowsiness")
 	drowsiness.GET("/heatmap/:hour", g.Controller.DrowsinessController.WebDrowsinessHeatmap)
