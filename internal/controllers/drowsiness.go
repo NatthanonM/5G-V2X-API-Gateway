@@ -162,15 +162,6 @@ func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
 	})
 }
 
-// WebDrowsinessStatAgebar ...
-func (r *DrowsinessController) WebDrowsinessStatAgebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
-	})
-	return
-}
-
 // WebDrowsinessStatCalendar ...
 func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
 	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatCalendar()
@@ -202,15 +193,6 @@ func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
 		},
 		Data: res,
 	})
-}
-
-// WebDrowsinessStatGenderpie ...
-func (r *DrowsinessController) WebDrowsinessStatGenderpie(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
-	})
-	return
 }
 
 // WebAuthDriverDrowsinessStatTimebar ...

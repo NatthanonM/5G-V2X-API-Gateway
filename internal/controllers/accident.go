@@ -261,24 +261,6 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	})
 }
 
-// WebAccidentStatAgebar ...
-func (r *AccidentController) WebAccidentStatAgebar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
-	})
-	return
-}
-
-// WebAccidentStatGenderbar ...
-func (r *AccidentController) WebAccidentStatGenderbar(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, models.BaseResponse{
-		Success: false,
-		Message: "Not implemented.",
-	})
-	return
-}
-
 // WebAuthAccidentMap ...
 func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
 	hour := c.Param("hour")
