@@ -95,8 +95,8 @@ func (as *AccidentService) GetAccidentStatCalendar(year int64) ([]*models.StatCa
 }
 
 // GetNumberOfAccidentTimeBar ...
-func (as *AccidentService) GetNumberOfAccidentTimeBar() ([]int32, error) {
-	res, err := as.AccidentRepository.GetNumberOfAccidentTimeBar()
+func (as *AccidentService) GetNumberOfAccidentTimeBar(from, to *time.Time) ([]int32, error) {
+	res, err := as.AccidentRepository.GetNumberOfAccidentTimeBar(from, to)
 	if err != nil {
 		return nil, err
 	}

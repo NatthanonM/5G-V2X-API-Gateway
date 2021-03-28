@@ -106,21 +106,6 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	}
 	stoptm := time.Unix(i, 0)
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
-		})
-		return
-	}
-
-	// t := time.Now()
-	// thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
-	// from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
-	// to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
 	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(&starttm, &stoptm)
 
 	if err != nil {
@@ -224,7 +209,30 @@ func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 
 // WebAccidentStatTimebar ...
 func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
-	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar()
+	start := c.Query("start")
+	stop := c.Query("stop")
+
+	i, err := strconv.ParseInt(start, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Start date is invalid",
+		})
+		return
+	}
+	starttm := time.Unix(i, 0)
+
+	i, err = strconv.ParseInt(stop, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Stop date is invalid",
+		})
+		return
+	}
+	stoptm := time.Unix(i, 0)
+
+	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar(&starttm, &stoptm)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)

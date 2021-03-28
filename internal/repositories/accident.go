@@ -3,8 +3,10 @@ package repositories
 import (
 	"5g-v2x-api-gateway-service/internal/config"
 	"5g-v2x-api-gateway-service/internal/infrastructures/grpc"
+	"5g-v2x-api-gateway-service/internal/utils"
 	proto "5g-v2x-api-gateway-service/pkg/api"
 	"context"
+	"time"
 
 	"github.com/golang/protobuf/ptypes/empty"
 )
@@ -64,12 +66,15 @@ func (r *AccidentRepository) GetAccidentStatCalendar(year *int64) (*proto.GetNum
 	return res, nil
 }
 
-func (r *AccidentRepository) GetNumberOfAccidentTimeBar() (*proto.GetNumberOfAccidentTimeBarResponse, error) {
+func (r *AccidentRepository) GetNumberOfAccidentTimeBar(from, to *time.Time) (*proto.GetNumberOfAccidentTimeBarResponse, error) {
 	//	Connect to gRPC service
 	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
 	defer cc.Close()
 
-	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentTimeBar(context.Background(), &empty.Empty{})
+	res, err := proto.NewAccidentServiceClient(cc).GetNumberOfAccidentTimeBar(context.Background(), &proto.GetNumberOfAccidentTimeBarRequest{
+		From: utils.WrapperTime(from),
+		To:   utils.WrapperTime(to),
+	})
 	if err != nil {
 		return nil, err
 	}
