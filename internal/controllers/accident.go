@@ -401,7 +401,7 @@ func (r *AccidentController) WebAuthDriverAccidentStatTimebar(c *gin.Context) {
 }
 
 func (r *AccidentController) WebAccidentStatRoadToptenYear(c *gin.Context) {
-	year := c.Param("year")
+	year := c.Query("year")
 	i, err := strconv.Atoi(year)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
