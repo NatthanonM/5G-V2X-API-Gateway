@@ -216,7 +216,7 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		return
 	}
 
-	drowsinesses, err := dc.Services.ServiceGateway.GetDrowsinessData(nil, &driver.Username)
+	drowsinesses, err := dc.Services.ServiceGateway.GetDrowsinessData(nil, nil, nil, &driver.Username)
 	if err != nil {
 		customError := utils.NewCustomError(err)
 		c.JSON(http.StatusBadRequest, models.BaseResponse{

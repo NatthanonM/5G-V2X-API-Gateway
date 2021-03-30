@@ -75,6 +75,7 @@ func (g *GinServer) configure() {
 	drowsiness.GET("/map", g.Controller.DrowsinessController.WebDrowsinessMap)
 	drowsiness.GET("/stat/timebar", g.Controller.DrowsinessController.WebDrowsinessStatTimebar)
 	drowsiness.GET("/stat/calendar", g.Controller.DrowsinessController.WebDrowsinessStatCalendar)
+	drowsiness.GET("/stat/count", g.Controller.DrowsinessController.WebDrowsinessCount)
 	//// FOR AUTH WEB
 	auth := web.Group("/auth")
 	auth.OPTIONS("/login", g.preflight)

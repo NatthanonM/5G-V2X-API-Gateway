@@ -26,6 +26,11 @@ type WebAuthDriverDrowsinessStatTimebarResponse struct {
 	Data []int64 `json:"data"`
 }
 
+type DrowsinessCountResponse struct {
+	BaseResponse
+	Data int64 `json:"data"`
+}
+
 //// REST RESPONSE ENTITY ////
 
 // DrowsinessData ...

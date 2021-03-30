@@ -53,8 +53,10 @@ func (ds *DrowsinessService) GetDailyDrowsinessHeatmap(from, to *time.Time) ([]*
 }
 
 // GetDrowsinessData ...
-func (ds *DrowsinessService) GetDrowsinessData(carID, username *string) ([]*models.Drowsiness, error) {
+func (ds *DrowsinessService) GetDrowsinessData(from, to *time.Time, carID, username *string) ([]*models.Drowsiness, error) {
 	res, err := ds.DrowsinessRepository.GetDrowsinessData(&proto.GetDrowsinessDataRequest{
+		From:     utils.WrapperTime(from),
+		To:       utils.WrapperTime(to),
 		CarId:    carID,
 		Username: username,
 	})
