@@ -7,8 +7,6 @@ import (
 	proto "5g-v2x-api-gateway-service/pkg/api"
 	"context"
 	"time"
-
-	"github.com/golang/protobuf/ptypes/empty"
 )
 
 // DrowsinessRepository ...
@@ -38,12 +36,14 @@ func (r *DrowsinessRepository) GetDrowsinessData(req *proto.GetDrowsinessDataReq
 	return res, nil
 }
 
-func (r *DrowsinessRepository) GetDrowsinessStatCalendar() (*proto.GetNumberOfDrowsinessToCalendarResponse, error) {
+func (r *DrowsinessRepository) GetDrowsinessStatCalendar(year *int64) (*proto.GetNumberOfDrowsinessToCalendarResponse, error) {
 	//	Connect to gRPC service
 	cc := r.GRPC.ClientConn(r.config.DataManagementServiceConnection)
 	defer cc.Close()
 
-	res, err := proto.NewDrowsinessServiceClient(cc).GetNumberOfDrowsinessToCalendar(context.Background(), &empty.Empty{})
+	res, err := proto.NewDrowsinessServiceClient(cc).GetNumberOfDrowsinessToCalendar(context.Background(), &proto.GetNumberOfDrowsinessToCalendarRequest{
+		Year: year,
+	})
 	if err != nil {
 		return nil, err
 	}

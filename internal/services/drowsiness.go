@@ -78,8 +78,8 @@ func (ds *DrowsinessService) GetDrowsinessData(carID, username *string) ([]*mode
 }
 
 // GetDrowsinessStatCalendar ...
-func (ds *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, error) {
-	res, err := ds.DrowsinessRepository.GetDrowsinessStatCalendar()
+func (ds *DrowsinessService) GetDrowsinessStatCalendar(year int64) ([]*models.StatCal, error) {
+	res, err := ds.DrowsinessRepository.GetDrowsinessStatCalendar(&year)
 	if err != nil {
 		return nil, err
 	}

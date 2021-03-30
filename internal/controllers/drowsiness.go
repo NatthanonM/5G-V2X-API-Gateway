@@ -192,7 +192,17 @@ func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
 
 // WebDrowsinessStatCalendar ...
 func (r *DrowsinessController) WebDrowsinessStatCalendar(c *gin.Context) {
-	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatCalendar()
+	year := c.Query("year")
+	i, err := strconv.Atoi(year)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid year",
+		})
+		return
+	}
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDrowsinessStatCalendar(int64(i))
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.StatCalResponse{
