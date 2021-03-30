@@ -27,27 +27,32 @@ func NewDrowsinessController(srv *services.Service, cf *config.Config) *Drowsine
 	}
 }
 
-// WebDrowsinessHeatmap ...
-func (r *DrowsinessController) WebDrowsinessHeatmap(c *gin.Context) {
-	hour := c.Param("hour")
-	hourInt, err := strconv.Atoi(hour)
+// WebDrowsinessMap ...
+func (r *DrowsinessController) WebDrowsinessMap(c *gin.Context) {
+	start := c.Query("start")
+	end := c.Query("end")
+
+	i, err := strconv.ParseInt(start, 10, 64)
 	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, models.DrowsinessMapResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Start date is invalid",
 		})
 		return
 	}
+	starttm := time.Unix(i, 0)
 
-	t := time.Now()
-	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
-	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
-	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
-	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyDrowsinessHeatmap(&from, &to)
+	i, err = strconv.ParseInt(end, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "End date is invalid",
+		})
+		return
+	}
+	endtm := time.Unix(i, 0)
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetDailyDrowsinessHeatmap(&starttm, &endtm)
 
 	if err != nil {
 		log.Println(err)
