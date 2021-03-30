@@ -68,7 +68,7 @@ func (g *GinServer) configure() {
 	accident := web.Group("/accident")
 	accident.GET("/map", g.Controller.AccidentController.WebAccidentMap)
 	// accident.GET("/map/:hour", g.Controller.AccidentController.WebAccidentHeatmap)
-	accident.GET("/stat/calendar/:year", g.Controller.AccidentController.WebAccidentStatCalendar)
+	accident.GET("/stat/calendar", g.Controller.AccidentController.WebAccidentStatCalendar)
 	accident.GET("/stat/roadpie", g.Controller.AccidentController.WebAccidentStatRoadpie)
 	accident.GET("/stat/road/topten/:year", g.Controller.AccidentController.WebAccidentStatRoadToptenYear)
 	accident.GET("/stat/timebar", g.Controller.AccidentController.WebAccidentStatTimebar)

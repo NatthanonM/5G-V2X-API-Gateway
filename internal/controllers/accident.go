@@ -137,7 +137,7 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 
 // WebAccidentStatCalendar ...
 func (r *AccidentController) WebAccidentStatCalendar(c *gin.Context) {
-	year := c.Param("year")
+	year := c.Query("year")
 	i, err := strconv.Atoi(year)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
