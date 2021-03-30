@@ -84,7 +84,7 @@ func (r *AccidentController) CarAccident(c *gin.Context) {
 // WebAccidentMap ...
 func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	start := c.Query("start")
-	stop := c.Query("stop")
+	end := c.Query("end")
 
 	i, err := strconv.ParseInt(start, 10, 64)
 	if err != nil {
@@ -96,17 +96,17 @@ func (r *AccidentController) WebAccidentMap(c *gin.Context) {
 	}
 	starttm := time.Unix(i, 0)
 
-	i, err = strconv.ParseInt(stop, 10, 64)
+	i, err = strconv.ParseInt(end, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
 			Success: false,
-			Message: "Stop date is invalid",
+			Message: "End date is invalid",
 		})
 		return
 	}
-	stoptm := time.Unix(i, 0)
+	endtm := time.Unix(i, 0)
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(&starttm, &stoptm)
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAccidentMap(&starttm, &endtm)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
@@ -210,7 +210,7 @@ func (r *AccidentController) WebAccidentStatRoadpie(c *gin.Context) {
 // WebAccidentStatTimebar ...
 func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	start := c.Query("start")
-	stop := c.Query("stop")
+	end := c.Query("end")
 
 	i, err := strconv.ParseInt(start, 10, 64)
 	if err != nil {
@@ -222,17 +222,17 @@ func (r *AccidentController) WebAccidentStatTimebar(c *gin.Context) {
 	}
 	starttm := time.Unix(i, 0).UTC()
 
-	i, err = strconv.ParseInt(stop, 10, 64)
+	i, err = strconv.ParseInt(end, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
 			Success: false,
-			Message: "Stop date is invalid",
+			Message: "End date is invalid",
 		})
 		return
 	}
-	stoptm := time.Unix(i, 0).UTC()
+	endtm := time.Unix(i, 0).UTC()
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar(&starttm, &stoptm)
+	res, err := r.Services.ServiceGateway.AccidentService.GetNumberOfAccidentTimeBar(&starttm, &endtm)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
@@ -276,23 +276,23 @@ func (r *AccidentController) WebAccidentCount(c *gin.Context) {
 	}
 	starttm := time.Unix(i, 0).UTC()
 
-	var stoptm time.Time
+	var endtm time.Time
 
 	switch mode {
 	case "date":
-		stoptm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+1,
+		endtm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+1,
 			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
 	case "week":
-		stoptm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+7,
+		endtm = time.Date(starttm.Year(), starttm.Month(), starttm.Day()+7,
 			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
 	case "month":
-		stoptm = time.Date(starttm.Year(), starttm.Month()+1, starttm.Day(),
+		endtm = time.Date(starttm.Year(), starttm.Month()+1, starttm.Day(),
 			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
 	case "quarter":
-		stoptm = time.Date(starttm.Year(), starttm.Month()+3, starttm.Day(),
+		endtm = time.Date(starttm.Year(), starttm.Month()+3, starttm.Day(),
 			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
 	case "year":
-		stoptm = time.Date(starttm.Year()+1, starttm.Month(), starttm.Day(),
+		endtm = time.Date(starttm.Year()+1, starttm.Month(), starttm.Day(),
 			starttm.Hour(), starttm.Minute(), starttm.Second(), starttm.Nanosecond(), time.UTC)
 	default:
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
@@ -302,7 +302,7 @@ func (r *AccidentController) WebAccidentCount(c *gin.Context) {
 		return
 	}
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&starttm, &stoptm, nil, nil)
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&starttm, &endtm, nil, nil)
 	if err != nil {
 		customError := utils.NewCustomError(err)
 		c.JSON(http.StatusBadRequest, models.BaseResponse{
