@@ -94,8 +94,8 @@ func (ds *DrowsinessService) GetDrowsinessStatCalendar() ([]*models.StatCal, err
 }
 
 // GetNumberOfDrowsinessTimeBar ...
-func (ds *DrowsinessService) GetNumberOfDrowsinessTimeBar() ([]int32, error) {
-	res, err := ds.DrowsinessRepository.GetNumberOfDrowsinessTimeBar()
+func (ds *DrowsinessService) GetNumberOfDrowsinessTimeBar(from, to *time.Time) ([]int32, error) {
+	res, err := ds.DrowsinessRepository.GetNumberOfDrowsinessTimeBar(from, to)
 	if err != nil {
 		return nil, err
 	}

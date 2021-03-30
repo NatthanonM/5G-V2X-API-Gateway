@@ -136,7 +136,30 @@ func (r *DrowsinessController) WebAuthDrowsinessMap(c *gin.Context) {
 
 // WebDrowsinessStatTimebar ...
 func (r *DrowsinessController) WebDrowsinessStatTimebar(c *gin.Context) {
-	res, err := r.Services.ServiceGateway.DrowsinessService.GetNumberOfDrowsinessTimeBar()
+	start := c.Query("start")
+	end := c.Query("end")
+
+	i, err := strconv.ParseInt(start, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Start date is invalid",
+		})
+		return
+	}
+	starttm := time.Unix(i, 0).UTC()
+
+	i, err = strconv.ParseInt(end, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "End date is invalid",
+		})
+		return
+	}
+	endtm := time.Unix(i, 0).UTC()
+
+	res, err := r.Services.ServiceGateway.DrowsinessService.GetNumberOfDrowsinessTimeBar(&starttm, &endtm)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.StatBarResponse{
