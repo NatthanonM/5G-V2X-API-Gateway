@@ -3,12 +3,15 @@ package models
 import "time"
 
 type Driver struct {
-	DriverID    string    `json:"driver_id"`
-	Firstname   string    `json:"firstname"`
-	Lastname    string    `json:"lastname"`
-	DateOfBirth time.Time `json:"date_of_birth"`
-	Gender      string    `json:"gender"`
-	Username    string    `json:"username"`
+	DriverID        string    `json:"driver_id"`
+	Firstname       string    `json:"firstname"`
+	Lastname        string    `json:"lastname"`
+	DateOfBirth     time.Time `json:"date_of_birth"`
+	Gender          string    `json:"gender"`
+	Username        string    `json:"username"`
+	AccidentCount   int64     `json:"accidentCount"`
+	DrowsinessCount int64     `json:"drowsinessCount"`
+	AvgResponseTime *float64
 }
 
 //// REST BODY ////
@@ -66,3 +69,5 @@ type WebAuthDriverDrowsinessResponse struct {
 }
 
 //// REST RESPONSE ENTITY ////
+type DriverResponse struct {
+}

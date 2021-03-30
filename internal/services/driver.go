@@ -12,14 +12,18 @@ import (
 // DriverService ...
 type DriverService struct {
 	DriverRepository *repositories.DriverRepository
-	config           *config.Config
+	*AccidentService
+	*DrowsinessService
+	config *config.Config
 }
 
 // NewDriverService ...
-func NewDriverService(repo *repositories.DriverRepository, cf *config.Config) *DriverService {
+func NewDriverService(repo *repositories.DriverRepository, accSrv *AccidentService, drowsSrv *DrowsinessService, cf *config.Config) *DriverService {
 	return &DriverService{
-		DriverRepository: repo,
-		config:           cf,
+		DriverRepository:  repo,
+		config:            cf,
+		AccidentService:   accSrv,
+		DrowsinessService: drowsSrv,
 	}
 }
 
@@ -51,12 +55,27 @@ func (ds *DriverService) GetAllDriver() ([]*models.Driver, error) {
 	}
 	driverList := []*models.Driver{}
 	for _, driver := range drivers.Drivers {
-		driverList = append(driverList, &models.Driver{DriverID: driver.DriverId,
-			Firstname:   driver.Firstname,
-			Lastname:    driver.Lastname,
-			DateOfBirth: driver.DateOfBirth.AsTime(),
-			Gender:      driver.Gender,
-			Username:    driver.Username,
+		accidents, _ := ds.AccidentService.GetAccident(nil, nil, nil, &driver.Username)
+		drowsinesses, _ := ds.DrowsinessService.GetDrowsinessData(nil, nil, nil, &driver.Username)
+		var avgResponseTime *float64
+		if len(drowsinesses) > 0 {
+			var avg float64
+			for _, drowsiness := range drowsinesses {
+				avg += drowsiness.ResponseTime
+			}
+			avg = avg / float64(len(drowsinesses))
+			avgResponseTime = &avg
+		}
+		driverList = append(driverList, &models.Driver{
+			DriverID:        driver.DriverId,
+			Firstname:       driver.Firstname,
+			Lastname:        driver.Lastname,
+			DateOfBirth:     driver.DateOfBirth.AsTime(),
+			Gender:          driver.Gender,
+			Username:        driver.Username,
+			AccidentCount:   int64(len(accidents)),
+			DrowsinessCount: int64(len(drowsinesses)),
+			AvgResponseTime: avgResponseTime,
 		})
 	}
 	return driverList, nil
