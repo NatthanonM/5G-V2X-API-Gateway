@@ -110,3 +110,16 @@ func (ds *DriverService) Login(username, password, carID string) (*string, error
 	}
 	return &res.DriverId, nil
 }
+
+func (ds *DriverService) Update(driverID string, firstname, lastname *string, dateOfBirth *time.Time) error {
+	err := ds.DriverRepository.UpdateDriver(&proto.UpdateDriverRequest{
+		DriverId:    driverID,
+		Firstname:   firstname,
+		Lastname:    lastname,
+		DateOfBirth: utils.WrapperTime(dateOfBirth),
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}

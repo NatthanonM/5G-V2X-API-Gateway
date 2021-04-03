@@ -87,3 +87,16 @@ func (dr *DriverRepository) LoginDriver(req *proto.LoginDriverRequest) (*proto.L
 
 	return res, nil
 }
+
+func (dr *DriverRepository) UpdateDriver(req *proto.UpdateDriverRequest) error {
+	cc := dr.GRPC.ClientConn(dr.config.UserServiceConnection)
+	defer cc.Close()
+
+	_, err := proto.NewDriverServiceClient(cc).UpdateDriver(context.Background(), req)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

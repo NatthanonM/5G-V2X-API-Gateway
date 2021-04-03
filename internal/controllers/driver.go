@@ -280,3 +280,37 @@ func (dc *DriverController) CarLogin(c *gin.Context) {
 		Message: "login successful",
 	})
 }
+
+// WebAuthUpdateDriver
+func (dc *DriverController) WebAuthUpdateDriver(c *gin.Context) {
+	driverID := c.Param("id")
+
+	var temp models.DriverUpdateBody
+	c.BindJSON(&temp)
+
+	if temp.Firstname == nil && temp.Lastname == nil && temp.DateOfBirth == nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid parameter.",
+		})
+		return
+	}
+
+	err := dc.Services.ServiceGateway.DriverService.Update(driverID, temp.Firstname, temp.Lastname, temp.DateOfBirth)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusCreated, models.BaseResponse{
+		Success: true,
+		Message: "update driver successful",
+	})
+
+}

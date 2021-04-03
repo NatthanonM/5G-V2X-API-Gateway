@@ -33,6 +33,12 @@ type DriverLoginBody struct {
 	CarID    string `json:"car_id"`
 }
 
+type DriverUpdateBody struct {
+	Firstname   *string    `json:"firstname"`
+	Lastname    *string    `json:"lastname"`
+	DateOfBirth *time.Time `json:"date_of_birth"`
+}
+
 //// REST RESPONSE ////
 
 // WebAuthGetDriversResponse ...
