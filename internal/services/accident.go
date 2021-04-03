@@ -130,40 +130,48 @@ func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*mode
 		return nil, err
 	}
 	accidents := []*models.AccidentData{}
+	tmpDrivers := make(map[string]*models.Driver)
+	tmpCars := make(map[string]*models.Car)
 	for _, accident := range res.Accidents {
 		// TODO#1: call user service to get driver id by username
-		driver, err := as.DriverRepository.GetDriverByUsername(&proto.GetDriverByUsernameRequest{
-			Username: accident.Username,
-		})
-		if err != nil {
-			return nil, err
+		if _, ok := tmpDrivers[accident.Username]; !ok {
+			driver, err := as.DriverRepository.GetDriverByUsername(&proto.GetDriverByUsernameRequest{
+				Username: accident.Username,
+			})
+			if err != nil {
+				return nil, err
+			}
+			tmpDrivers[accident.Username] = &models.Driver{
+				DriverID:    driver.DriverId,
+				Firstname:   driver.Firstname,
+				Lastname:    driver.Lastname,
+				DateOfBirth: driver.DateOfBirth.AsTime(),
+				Gender:      driver.Gender,
+				Username:    driver.Username,
+			}
 		}
 		// TODO#2: call data-management service to get driver id by username
-		car, err := as.CarRepository.GetCar(&proto.GetCarRequest{
-			// TODO: change to accident.CarId when carId is valid
-			CarId: accident.CarId,
-		})
-		if err != nil {
-			return nil, err
+		if _, ok := tmpCars[accident.CarId]; !ok {
+			car, err := as.CarRepository.GetCar(&proto.GetCarRequest{
+				// TODO: change to accident.CarId when carId is valid
+				CarId: accident.CarId,
+			})
+			if err != nil {
+				return nil, err
+			}
+			tmpCars[accident.CarId] = &models.Car{
+				CarID:                     car.CarId,
+				VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+				CarDetail:                 car.CarDetail,
+				RegisteredAt:              car.RegisteredAt.AsTime(),
+			}
 		}
 		accidents = append(accidents, &models.AccidentData{
 			Detail: models.AccidentDetail{
-				Time: accident.Time.AsTime(),
-				Road: accident.Road,
-				Driver: &models.Driver{
-					DriverID:    driver.DriverId,
-					Firstname:   driver.Firstname,
-					Lastname:    driver.Lastname,
-					DateOfBirth: driver.DateOfBirth.AsTime(),
-					Gender:      driver.Gender,
-					Username:    driver.Username,
-				},
-				Car: &models.Car{
-					CarID:                     car.CarId,
-					VehicleRegistrationNumber: car.VehicleRegistrationNumber,
-					CarDetail:                 car.CarDetail,
-					RegisteredAt:              car.RegisteredAt.AsTime(),
-				},
+				Time:   accident.Time.AsTime(),
+				Road:   accident.Road,
+				Driver: tmpDrivers[accident.Username],
+				Car:    tmpCars[accident.CarId],
 			},
 			Coordinate: models.Coordinate{
 				Lat: accident.Latitude,

@@ -322,24 +322,29 @@ func (r *AccidentController) WebAccidentCount(c *gin.Context) {
 
 // WebAuthAccidentMap ...
 func (r *AccidentController) WebAuthAccidentMap(c *gin.Context) {
-	hour := c.Param("hour")
-	hourInt, err := strconv.Atoi(hour)
+	start := c.Query("start")
+	end := c.Query("end")
+
+	i, err := strconv.ParseInt(start, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.AccidentMapResponse{
-			BaseResponse: models.BaseResponse{
-				Success: false,
-				Message: "Invalid parameter.",
-			},
-			Data: nil,
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Start date is invalid",
 		})
 		return
 	}
+	starttm := time.Unix(i, 0).UTC()
 
-	t := time.Now()
-	thTimeZone, _ := time.LoadLocation("Asia/Bangkok")
-	from := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 0, 0, 0, thTimeZone).UTC()
-	to := time.Date(t.Year(), t.Month(), t.Day(), hourInt, 59, 59, 999, thTimeZone).UTC()
-	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(&from, &to)
+	i, err = strconv.ParseInt(end, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "End date is invalid",
+		})
+		return
+	}
+	endtm := time.Unix(i, 0).UTC()
+	res, err := r.Services.ServiceGateway.AccidentService.GetDailyAuthAccidentMap(&starttm, &endtm)
 
 	if err != nil {
 		customError := utils.NewCustomError(err)
