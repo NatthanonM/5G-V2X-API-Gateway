@@ -5,6 +5,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/models"
 	"5g-v2x-api-gateway-service/internal/services"
 	"5g-v2x-api-gateway-service/internal/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -77,7 +78,7 @@ func (cc *CarController) WebAuthGetCars(c *gin.Context) {
 	c.JSON(http.StatusOK, models.WebAuthGetCars{
 		BaseResponse: models.BaseResponse{
 			Success: true,
-			Message: "Register car successful.",
+			Message: "Get cars successful.",
 		},
 		Data: carList,
 	})
@@ -123,7 +124,7 @@ func (cc *CarController) WebAuthGetCar(c *gin.Context) {
 	c.JSON(http.StatusOK, models.WebAuthGetCar{
 		BaseResponse: models.BaseResponse{
 			Success: true,
-			Message: "Register car successful.",
+			Message: "Get car successful.",
 		},
 		Data: &models.WebAuthGetCarResponseData{
 			Car:        car,
@@ -131,4 +132,38 @@ func (cc *CarController) WebAuthGetCar(c *gin.Context) {
 			Drowsiness: drowsiness,
 		},
 	})
+}
+
+// WebAuthUpdateCar
+func (cc *CarController) WebAuthUpdateCar(c *gin.Context) {
+	carID := c.Param("id")
+
+	var temp models.UpdateCarBody
+	c.BindJSON(&temp)
+
+	if temp.CarDetail == nil && temp.VehicleRegistrationNumber == nil {
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: "Invalid parameter.",
+		})
+		return
+	}
+
+	err := cc.Services.ServiceGateway.CarService.Update(carID, temp.CarDetail, temp.VehicleRegistrationNumber)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusCreated, models.BaseResponse{
+		Success: true,
+		Message: fmt.Sprintf("update car `%s` successful", carID),
+	})
+
 }

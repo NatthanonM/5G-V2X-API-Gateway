@@ -19,6 +19,11 @@ type NewCarBody struct {
 	MfgAt                     *time.Time `json:"mfg_at"`
 }
 
+type UpdateCarBody struct {
+	VehicleRegistrationNumber *string `json:"vehicle_registration_number"`
+	CarDetail                 *string `json:"car_detail"`
+}
+
 //// REST RESPONSE ////
 
 // WebAuthCreateCar ...

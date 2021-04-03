@@ -6,6 +6,7 @@ import (
 	"5g-v2x-api-gateway-service/internal/repositories"
 	proto "5g-v2x-api-gateway-service/pkg/api"
 	"time"
+
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -30,7 +31,7 @@ func (cs *CarService) RegisterNewCar(carDetail, vehicleRegistrationNumber string
 	request := proto.RegisterNewCarRequest{
 		CarDetail:                 carDetail,
 		VehicleRegistrationNumber: vehicleRegistrationNumber,
-		MfgAt:						protoTime,
+		MfgAt:                     protoTime,
 	}
 
 	res, err := cs.CarRepository.RegisterNewCar(&request)
@@ -76,4 +77,17 @@ func (cs *CarService) GetCar(carID string) (*models.Car, error) {
 		RegisteredAt:              car.RegisteredAt.AsTime(),
 		MfgAt:                     car.MfgAt.AsTime(),
 	}, nil
+}
+
+// Update ...
+func (cs *CarService) Update(carID string, carDetail, vehicleRegistrationNumber *string) error {
+	err := cs.CarRepository.UpdateCar(&proto.UpdateCarRequest{
+		CarId:                     carID,
+		CarDetail:                 carDetail,
+		VehicleRegistrationNumber: vehicleRegistrationNumber,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

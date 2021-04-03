@@ -96,7 +96,7 @@ func (g *GinServer) configure() {
 		auth.GET("/car/:id", g.Controller.CarController.WebAuthGetCar)
 		auth.POST("/car", g.Controller.CarController.WebAuthCreateCar)
 		auth.OPTIONS("/car", g.preflight)
-		// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
+		auth.PATCH("/car/:id", g.Controller.CarController.WebAuthUpdateCar)
 		// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 		auth.GET("/accident/map", g.Controller.AccidentController.WebAuthAccidentMap)
 		auth.GET("/drowsiness/map", g.Controller.DrowsinessController.WebAuthDrowsinessMap)

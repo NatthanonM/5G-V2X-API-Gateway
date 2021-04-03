@@ -61,3 +61,16 @@ func (cr *CarRepository) GetCar(req *proto.GetCarRequest) (*proto.Car, error) {
 
 	return res, nil
 }
+
+func (cr *CarRepository) UpdateCar(req *proto.UpdateCarRequest) error {
+	cc := cr.GRPC.ClientConn(cr.config.DataManagementServiceConnection)
+	defer cc.Close()
+
+	_, err := proto.NewCarServiceClient(cc).UpdateCar(context.Background(), req)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
