@@ -99,7 +99,7 @@ func (g *GinServer) configure() {
 		// auth.PATCH("/car/:id", g.Controller.AccidentController.WebAuthUpdateCar)
 		// auth.DELETE("/car/:id", g.Controller.AccidentController.WebAuthDeleteCar)
 		auth.GET("/accident/map", g.Controller.AccidentController.WebAuthAccidentMap)
-		auth.GET("/drowsiness/map/:hour", g.Controller.DrowsinessController.WebAuthDrowsinessMap)
+		auth.GET("/drowsiness/map", g.Controller.DrowsinessController.WebAuthDrowsinessMap)
 		auth.GET("/driver/:id/accident", g.Controller.DriverController.WebAuthDriverAccident)
 		auth.GET("/driver/:id/accident/stat/timebar", g.Controller.AccidentController.WebAuthDriverAccidentStatTimebar)
 		auth.GET("/driver/:id/drowsiness", g.Controller.DriverController.WebAuthDriverDrowsiness)
