@@ -139,15 +139,19 @@ func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*mode
 				Username: accident.Username,
 			})
 			if err != nil {
-				return nil, err
-			}
-			tmpDrivers[accident.Username] = &models.Driver{
-				DriverID:    driver.DriverId,
-				Firstname:   driver.Firstname,
-				Lastname:    driver.Lastname,
-				DateOfBirth: driver.DateOfBirth.AsTime(),
-				Gender:      driver.Gender,
-				Username:    driver.Username,
+				tmpDrivers[accident.Username] = &models.Driver{
+					Username: accident.Username,
+				}
+				// return nil, err
+			} else {
+				tmpDrivers[accident.Username] = &models.Driver{
+					DriverID:    driver.DriverId,
+					Firstname:   driver.Firstname,
+					Lastname:    driver.Lastname,
+					DateOfBirth: driver.DateOfBirth.AsTime(),
+					Gender:      driver.Gender,
+					Username:    driver.Username,
+				}
 			}
 		}
 		// TODO#2: call data-management service to get driver id by username
@@ -157,13 +161,17 @@ func (as *AccidentService) GetDailyAuthAccidentMap(from, to *time.Time) ([]*mode
 				CarId: accident.CarId,
 			})
 			if err != nil {
-				return nil, err
-			}
-			tmpCars[accident.CarId] = &models.Car{
-				CarID:                     car.CarId,
-				VehicleRegistrationNumber: car.VehicleRegistrationNumber,
-				CarDetail:                 car.CarDetail,
-				RegisteredAt:              car.RegisteredAt.AsTime(),
+				tmpCars[accident.CarId] = &models.Car{
+					CarID: accident.CarId,
+				}
+				// return nil, err
+			} else {
+				tmpCars[accident.CarId] = &models.Car{
+					CarID:                     car.CarId,
+					VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+					CarDetail:                 car.CarDetail,
+					RegisteredAt:              car.RegisteredAt.AsTime(),
+				}
 			}
 		}
 		accidents = append(accidents, &models.AccidentData{

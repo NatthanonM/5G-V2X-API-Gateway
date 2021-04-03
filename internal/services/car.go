@@ -91,3 +91,14 @@ func (cs *CarService) Update(carID string, carDetail, vehicleRegistrationNumber 
 	}
 	return nil
 }
+
+// Delete ...
+func (cs *CarService) Delete(carID string) error {
+	err := cs.CarRepository.DeleteCar(&proto.DeleteCarRequest{
+		CarId: carID,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}

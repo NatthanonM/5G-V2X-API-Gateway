@@ -167,3 +167,26 @@ func (cc *CarController) WebAuthUpdateCar(c *gin.Context) {
 	})
 
 }
+
+// WebAuthDeleteCar
+func (cc *CarController) WebAuthDeleteCar(c *gin.Context) {
+	carID := c.Param("id")
+
+	err := cc.Services.ServiceGateway.CarService.Delete(carID)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusCreated, models.BaseResponse{
+		Success: true,
+		Message: fmt.Sprintf("delete car `%s` successful", carID),
+	})
+
+}

@@ -125,15 +125,19 @@ func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(from, to *time.Time) 
 				Username: drowsiness.Username,
 			})
 			if err != nil {
-				return nil, err
-			}
-			tmpDrivers[drowsiness.Username] = &models.Driver{
-				DriverID:    driver.DriverId,
-				Firstname:   driver.Firstname,
-				Lastname:    driver.Lastname,
-				DateOfBirth: driver.DateOfBirth.AsTime(),
-				Gender:      driver.Gender,
-				Username:    driver.Username,
+				tmpDrivers[drowsiness.Username] = &models.Driver{
+					Username: drowsiness.Username,
+				}
+				// return nil, err
+			} else {
+				tmpDrivers[drowsiness.Username] = &models.Driver{
+					DriverID:    driver.DriverId,
+					Firstname:   driver.Firstname,
+					Lastname:    driver.Lastname,
+					DateOfBirth: driver.DateOfBirth.AsTime(),
+					Gender:      driver.Gender,
+					Username:    driver.Username,
+				}
 			}
 		}
 		// TODO#2: call data-management service to get driver id by username
@@ -143,13 +147,17 @@ func (ds *DrowsinessService) GetDailyAuthDrowsinessHeatmap(from, to *time.Time) 
 				CarId: drowsiness.CarId,
 			})
 			if err != nil {
-				return nil, err
-			}
-			tmpCars[drowsiness.CarId] = &models.Car{
-				CarID:                     car.CarId,
-				VehicleRegistrationNumber: car.VehicleRegistrationNumber,
-				CarDetail:                 car.CarDetail,
-				RegisteredAt:              car.RegisteredAt.AsTime(),
+				tmpCars[drowsiness.CarId] = &models.Car{
+					CarID: drowsiness.CarId,
+				}
+				// return nil, err
+			} else {
+				tmpCars[drowsiness.CarId] = &models.Car{
+					CarID:                     car.CarId,
+					VehicleRegistrationNumber: car.VehicleRegistrationNumber,
+					CarDetail:                 car.CarDetail,
+					RegisteredAt:              car.RegisteredAt.AsTime(),
+				}
 			}
 		}
 		drowsinessMapData = append(drowsinessMapData, &models.DrowsinessData{
