@@ -123,3 +123,13 @@ func (ds *DriverService) Update(driverID string, firstname, lastname *string, da
 	}
 	return nil
 }
+
+func (ds *DriverService) Delete(driverID string) error {
+	err := ds.DriverRepository.DeleteDriver(&proto.DeleteDriverRequest{
+		DriverId: driverID,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}

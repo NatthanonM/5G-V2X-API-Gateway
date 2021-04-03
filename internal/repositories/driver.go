@@ -100,3 +100,16 @@ func (dr *DriverRepository) UpdateDriver(req *proto.UpdateDriverRequest) error {
 
 	return nil
 }
+
+func (dr *DriverRepository) DeleteDriver(req *proto.DeleteDriverRequest) error {
+	cc := dr.GRPC.ClientConn(dr.config.UserServiceConnection)
+	defer cc.Close()
+
+	_, err := proto.NewDriverServiceClient(cc).DeleteDriver(context.Background(), req)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

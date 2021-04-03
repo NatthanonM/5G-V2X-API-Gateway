@@ -310,7 +310,29 @@ func (dc *DriverController) WebAuthUpdateDriver(c *gin.Context) {
 	// Success
 	c.JSON(http.StatusCreated, models.BaseResponse{
 		Success: true,
-		Message: "update driver successful",
+		Message: fmt.Sprintf("update driver `%s` successful", driverID),
+	})
+
+}
+
+func (dc *DriverController) WebAuthDeleteDriver(c *gin.Context) {
+	driverID := c.Param("id")
+
+	err := dc.Services.ServiceGateway.DriverService.Delete(driverID)
+
+	if err != nil {
+		customError := utils.NewCustomError(err)
+		c.JSON(http.StatusBadRequest, models.BaseResponse{
+			Success: false,
+			Message: customError.Message,
+		})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusCreated, models.BaseResponse{
+		Success: true,
+		Message: fmt.Sprintf("delete driver `%s` successful", driverID),
 	})
 
 }
