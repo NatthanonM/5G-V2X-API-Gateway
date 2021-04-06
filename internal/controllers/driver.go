@@ -252,8 +252,12 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		sum1stDivingHour += v
 	}
 
-	avg1stDivingHour = sum1stDivingHour / float64(len(drowsyDivingHourEachDay))
-	avgResponseTime = sumResponseTime / float64(len(drowsinesses))
+	if len(drowsyDivingHourEachDay) != 0 {
+		avg1stDivingHour = sum1stDivingHour / float64(len(drowsyDivingHourEachDay))
+	}
+	if len(drowsinesses) != 0 {
+		avgResponseTime = sumResponseTime / float64(len(drowsinesses))
+	}
 
 	// Success
 	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessResponse{
