@@ -80,6 +80,6 @@ type DriverResponse struct {
 
 type AuthDriverDrowsiness struct {
 	Drowsiness        []*Drowsiness `json:"records"`
-	Avg1stDrivingHour float64       `json:"avg1stDrivingHour"`
-	AvgResponse       float64       `json:"avgResponse"`
+	Avg1stDrivingHour *float64      `json:"avg1stDrivingHour"`
+	AvgResponse       *float64      `json:"avgResponse"`
 }
