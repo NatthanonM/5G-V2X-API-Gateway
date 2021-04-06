@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -226,9 +227,15 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		return
 	}
 
+	var sum1stDivingHour, sumResponseTime, avg1stDivingHour, avgResponseTime float64
+	sum1stDivingHour, sumResponseTime, avg1stDivingHour, avgResponseTime = 0, 0, 0, 0
+	drowsyDivingHourEachDay := make(map[time.Time]float64)
 	privateDrowsinessesData := []*models.Drowsiness{}
 
 	for _, drowsiness := range drowsinesses {
+		date := time.Date(drowsiness.Time.Year(), drowsiness.Time.Month(), drowsiness.Time.Day(), 0, 0, 0, 0, time.UTC)
+		drowsyDivingHourEachDay[date] = drowsiness.WorkingHour
+		sumResponseTime += drowsiness.ResponseTime
 		privateDrowsinessesData = append(privateDrowsinessesData, &models.Drowsiness{
 			CarID:        drowsiness.CarID,
 			Username:     drowsiness.Username,
@@ -241,13 +248,24 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		})
 	}
 
+	for _, v := range drowsyDivingHourEachDay {
+		sum1stDivingHour += v
+	}
+
+	avg1stDivingHour = sum1stDivingHour / float64(len(drowsyDivingHourEachDay))
+	avgResponseTime = sumResponseTime / float64(len(drowsinesses))
+
 	// Success
 	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessResponse{
 		BaseResponse: models.BaseResponse{
 			Success: true,
 			Message: fmt.Sprintf(`Get drowsiness of %s successful.`, driver.Username),
 		},
-		Data: privateDrowsinessesData,
+		Data: models.AuthDriverDrowsiness{
+			Drowsiness:        privateDrowsinessesData,
+			Avg1stDrivingHour: avg1stDivingHour,
+			AvgResponse:       avgResponseTime,
+		},
 	})
 }
 

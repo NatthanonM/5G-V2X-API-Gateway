@@ -71,9 +71,15 @@ type WebAuthDriverAccidentResponse struct {
 // WebAuthDriverDrowsinessResponse ...
 type WebAuthDriverDrowsinessResponse struct {
 	BaseResponse
-	Data []*Drowsiness `json:"data"`
+	Data AuthDriverDrowsiness `json:"data"`
 }
 
 //// REST RESPONSE ENTITY ////
 type DriverResponse struct {
+}
+
+type AuthDriverDrowsiness struct {
+	Drowsiness        []*Drowsiness `json:"records"`
+	Avg1stDrivingHour float64       `json:"avg1stDrivingHour"`
+	AvgResponse       float64       `json:"avgResponse"`
 }
