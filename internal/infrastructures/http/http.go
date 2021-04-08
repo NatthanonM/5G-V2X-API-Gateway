@@ -45,7 +45,7 @@ func (g *GinServer) configure() {
 
 	if g.config.Mode != "Development" {
 		g.route.Use(cors.New(cors.Config{
-			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
+			AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 			AllowHeaders: []string{"withCredentials", "Access-Control-Allow-Headers", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
 			// AllowAllOrigins:  true,
 			AllowCredentials: true,

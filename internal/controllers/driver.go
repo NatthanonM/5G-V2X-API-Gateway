@@ -227,8 +227,7 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		return
 	}
 
-	sum1stDivingHour, sumResponseTime := float64(0), float64(0)
-	var avg1stDivingHour, avgResponseTime *float64
+	sum1stDivingHour, sumResponseTime, avg1stDivingHour, avgResponseTime := float64(0), float64(0), float64(0), float64(0)
 	drowsyDivingHourEachDay := make(map[time.Time]float64)
 	privateDrowsinessesData := []*models.Drowsiness{}
 
@@ -252,14 +251,16 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		sum1stDivingHour += v
 	}
 
+	var avg1stDivingHourOutput, avgResponseTimeOutput *float64
 	if len(drowsyDivingHourEachDay) != 0 {
-		*avg1stDivingHour = 0
-		*avg1stDivingHour = sum1stDivingHour / float64(len(drowsyDivingHourEachDay))
+		avg1stDivingHour = sum1stDivingHour / float64(len(drowsyDivingHourEachDay))
+		avg1stDivingHourOutput = &avg1stDivingHour
 	}
 	if len(drowsinesses) != 0 {
-		*avgResponseTime = 0
-		*avgResponseTime = sumResponseTime / float64(len(drowsinesses))
+		avgResponseTime = sumResponseTime / float64(len(drowsinesses))
+		avgResponseTimeOutput = &avgResponseTime
 	}
+	fmt.Println("avg1stDivingHour:", avg1stDivingHour)
 
 	// Success
 	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessResponse{
@@ -269,8 +270,8 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		},
 		Data: models.AuthDriverDrowsiness{
 			Drowsiness:        privateDrowsinessesData,
-			Avg1stDrivingHour: avg1stDivingHour,
-			AvgResponse:       avgResponseTime,
+			Avg1stDrivingHour: avg1stDivingHourOutput,
+			AvgResponse:       avgResponseTimeOutput,
 		},
 	})
 }
