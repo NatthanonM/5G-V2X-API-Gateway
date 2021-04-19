@@ -260,7 +260,6 @@ func (dc *DriverController) WebAuthDriverDrowsiness(c *gin.Context) {
 		avgResponseTime = sumResponseTime / float64(len(drowsinesses))
 		avgResponseTimeOutput = &avgResponseTime
 	}
-	fmt.Println("avg1stDivingHour:", avg1stDivingHour)
 
 	// Success
 	c.JSON(http.StatusOK, models.WebAuthDriverDrowsinessResponse{

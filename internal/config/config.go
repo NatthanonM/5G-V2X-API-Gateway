@@ -14,7 +14,7 @@ type Config struct {
 
 	// Declare Connection
 	DataManagementServiceConnection string `env:"DATA_MANAGEMENT_CONNECTION" envDefault:"127.0.0.1:8082"`
-	UserServiceConnection           string `env:"DATA_MANAGEMENT_CONNECTION" envDefault:"127.0.0.1:8083"`
+	UserServiceConnection           string `env:"USER_CONNECTION" envDefault:"127.0.0.1:8083"`
 }
 
 // NewConfig ...
