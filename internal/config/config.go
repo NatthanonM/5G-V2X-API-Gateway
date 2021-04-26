@@ -8,6 +8,7 @@ type Config struct {
 	Mode          string `env:"MODE" envDefault:"Production"`
 	WebsiteOrigin string `env:"WEBSITE_ORIGIN" envDefault:"http://localhost:3000"`
 	WebsiteDomain string `env:"WEBSITE_DOMAIN" envDefault:"localhost"`
+	HttpSecure    bool   `env:"HTTP_SECURE" envDefault:"false"`
 	// Choose Starting Port
 	Port                string `env:"PORT" envDefault:"8080"`
 	AccessTokenLifetime string `env:"ACCESS_TOKEN_LIFETIME" envDefault:"8h"`

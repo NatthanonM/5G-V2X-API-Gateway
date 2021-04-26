@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  user-service:
+    build: .
+    ports:
+      - "80:8080"
+    environment:
+      MODE:
+      WEBSITE_ORIGIN:
+      WEBSITE_DOMAIN:
+      HTTP_SECURE:
+      PORT:
+      ACCESS_TOKEN_LIFETIME:
+      DATA_MANAGEMENT_CONNECTION:
+      USER_CONNECTION:
