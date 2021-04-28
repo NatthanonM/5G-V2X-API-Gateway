@@ -35,10 +35,12 @@ func NewAccidentController(srv *services.Service, cf *config.Config) *AccidentCo
 
 // CarAccident ...
 func (r *AccidentController) CarAccident(c *gin.Context) {
-	from := time.Now().Add(-(60 * time.Minute))
-	to := time.Now()
+	from := time.Now().Add(-(60 * time.Minute)).Unix()
+	to := time.Now().Unix()
+	starttm := time.Unix(from, 0)
+	endtm := time.Unix(to, 0)
 
-	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&from, &to, nil, nil)
+	res, err := r.Services.ServiceGateway.AccidentService.GetAccident(&starttm, &endtm, nil, nil)
 
 	publicAccidentData := []*models.AccidentData{}
 	for _, accident := range res {
